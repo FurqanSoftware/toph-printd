@@ -2,6 +2,12 @@
 
 ![](overview.png)
 
+## Dependencies
+
+Linux:
+
+- CUPS: Printd uses `lpr` to dispatch the print job to the printer.
+
 ## Configuration
 
 ``` toml
@@ -25,3 +31,7 @@ token = "..."               # Collect your printd token from Toph Support. The t
 [contest]
 id = "..." # The 24 character hex ID of the contest goes here.
 ```
+
+## To-dos
+
+- [ ] Windows support
