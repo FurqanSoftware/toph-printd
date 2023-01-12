@@ -30,7 +30,7 @@ type Config struct {
 }
 
 func parseConfig() (cfg Config, err error) {
-	b, err := os.ReadFile("config.toml")
+	b, err := os.ReadFile(flagConfig)
 	if err != nil {
 		return
 	}
