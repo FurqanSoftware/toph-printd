@@ -8,6 +8,15 @@ Linux:
 
 - CUPS: Printd uses `lpr` to dispatch the print job to the printer.
 
+## Usage
+
+```
+» ./printd -h
+Usage of ./printd:
+  -config string
+    	path to configuration file (default "printd-config.toml")
+```
+
 ## Configuration
 
 ``` toml
