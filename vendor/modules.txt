@@ -1,0 +1,14 @@
+# github.com/BurntSushi/toml v1.2.1
+## explicit; go 1.16
+github.com/BurntSushi/toml
+github.com/BurntSushi/toml/internal
+# github.com/phpdave11/gofpdi v1.0.11
+## explicit; go 1.12
+github.com/phpdave11/gofpdi
+# github.com/pkg/errors v0.8.1
+## explicit
+github.com/pkg/errors
+# github.com/signintech/gopdf v0.15.1
+## explicit; go 1.13
+github.com/signintech/gopdf
+github.com/signintech/gopdf/fontmaker/core
