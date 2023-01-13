@@ -1,6 +1,14 @@
 # Printd
 
+Allow participants to request prints right from within Toph. Process print jobs locally using Printd.
+
 ![](overview.png)
+
+You will have to download Printd and run it on a local computer connected to a printer.
+
+If the computer with the printer has Linux on it, you will need to ensure that CUPS is installed and the printer is configured correctly.
+
+You will also need a [configuration file](#configuration) for Printd. This configuration file is contest-specific. You can download this configuration file from Toph once the printing feature is enabled for your contest.
 
 ## Dependencies
 
