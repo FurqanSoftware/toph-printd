@@ -12,9 +12,9 @@ You will also need a [configuration file](#configuration) for Printd. This confi
 
 ## Example
 
-[An example](example.pdf) is included in this repository.
+[An example](example/example.pdf) is included in this repository.
 
-![](example.png)
+![](example/header.png)
 
 Every page printed is prepended with a header. Prints by participants show the participant number and name or account handle in the header. Test prints show "Test Print" in the header instead.
 
