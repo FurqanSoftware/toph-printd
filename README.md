@@ -34,7 +34,7 @@ Usage of ./printd:
 ``` toml
 [printd]
 fontSize = 13     # In px. All text uses this same font size.
-lineHeight = 20   # In px. Must me larger than fontSize.
+lineHeight = 20   # In px. Must be larger than fontSize.
 marginTop = 50    # Margin at the top edge of each page.
 marginRight = 25  # ... on the right edge of each page.
 marginBottom = 50 # ... on the bottom edge of each page.
