@@ -10,6 +10,16 @@ If the computer with the printer has Linux on it, you will need to ensure that C
 
 You will also need a [configuration file](#configuration) for Printd. This configuration file is contest-specific. You can download this configuration file from Toph once the printing feature is enabled for your contest.
 
+## Example
+
+[An example](example.pdf) is included in this repository.
+
+![](example.png)
+
+Every page printed is prepended with a header. Prints by participants show the participant number and name or account handle in the header. Test prints show "Test Print" in the header instead.
+
+The contest title, the timestamp of when the print was requested, and page numbers are also included in the header.
+
 ## Dependencies
 
 Linux:
