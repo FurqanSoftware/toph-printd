@@ -16,6 +16,10 @@ Linux:
 
 - CUPS: Printd uses `lpr` to dispatch the print job to the printer.
 
+Windows:
+
+- [PDFtoPrinter](http://www.columbia.edu/~em36/pdftoprinter.html): Printd uses `PDFtoPrinter` to dispatch the print job to the printer. Download PDFtoPrinter.exe and put it in the same directory as printd.exe.
+
 ## Usage
 
 ```
@@ -51,4 +55,4 @@ id = "..." # The 24 character hex ID of the contest goes here.
 
 ## To-dos
 
-- [ ] Windows support
+- [x] Windows support
