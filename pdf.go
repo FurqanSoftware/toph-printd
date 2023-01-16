@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/signintech/gopdf"
 )
@@ -40,7 +41,7 @@ func (b PDFBuilder) Build(name string, pr Print) error {
 
 	linesperpage -= len(headerlines) + 2
 
-	lines, err := pdf.SplitText(pr.Content, pagesize.W-pdf.MarginLeft()-pdf.MarginRight())
+	lines, err := pdf.SplitText(b.tabToSpaces(pr.Content), pagesize.W-pdf.MarginLeft()-pdf.MarginRight())
 	if err != nil {
 		return err
 	}
@@ -93,6 +94,10 @@ func (b PDFBuilder) header(pdf *gopdf.GoPdf, lines []string, first bool, pageno,
 
 func (b PDFBuilder) newLine(pdf *gopdf.GoPdf) {
 	pdf.SetNewXY(pdf.GetY()+float64(b.cfg.Printd.LineHeight), pdf.MarginLeft(), float64(b.cfg.Printd.LineHeight))
+}
+
+func (b PDFBuilder) tabToSpaces(t string) string {
+	return strings.ReplaceAll(t, "\t", strings.Repeat(" ", b.cfg.Printd.TabSize))
 }
 
 var (

@@ -49,6 +49,7 @@ marginTop = 50    # Margin at the top edge of each page.
 marginRight = 25  # ... on the right edge of each page.
 marginBottom = 50 # ... on the bottom edge of each page.
 marginLeft = 25   # ... on the left edge of each page.
+tabSize = 4       # Replaces tabs with this many spaces.
 keepPDF = true    # When true, does not delete generated PDF after print.
 
 [printer]
@@ -64,3 +65,4 @@ contestID = "..."           # The 24 character hex ID of the contest goes here.
 ## To-dos
 
 - [x] Windows support
+- [ ] Improve tab-to-spaces behavior

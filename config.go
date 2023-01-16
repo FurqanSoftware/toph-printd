@@ -14,6 +14,7 @@ type Config struct {
 		MarginRight  float64
 		MarginBottom float64
 		MarginLeft   float64
+		TabSize      int
 		KeepPDF      bool
 	}
 	Printer struct {
