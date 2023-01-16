@@ -16,7 +16,7 @@ You will also need a [configuration file](#configuration) for Printd. This confi
 
 ![](example/header.png)
 
-Every page printed is prepended with a header. Prints by participants show the participant number and name or account handle in the header. Test prints show "Test Print" in the header instead.
+Every page printed is prepended with a header. Prints by participants show the participant number and name or account handle in the header. Test prints show "‹Test Print›" in the header instead.
 
 The contest title, the timestamp of when the print was requested, and page numbers are also included in the header.
 
