@@ -20,7 +20,7 @@ type Print struct {
 
 func getNextPrint(ctx context.Context, cfg Config) (Print, error) {
 	for {
-		req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/printd/contests/%s/next_print", cfg.Toph.BaseURL, cfg.Toph.ContestID), nil)
+		req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/printd/contests/%s/next_print", cfg.Toph.BaseURL, cfg.Contest.ID), nil)
 		req.Header.Add("Authorization", "Printd "+cfg.Toph.Token)
 		if err != nil {
 			return Print{}, err
@@ -68,7 +68,7 @@ func runPrintJob(ctx context.Context, cfg Config, pr Print) error {
 }
 
 func markPrintDone(ctx context.Context, cfg Config, pr Print) error {
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/printd/prints/%s/mark_done?contest=%s", cfg.Toph.BaseURL, pr.ID, cfg.Toph.ContestID), nil)
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/printd/prints/%s/mark_done?contest=%s", cfg.Toph.BaseURL, pr.ID, cfg.Contest.ID), nil)
 	req.Header.Add("Authorization", "Printd "+cfg.Toph.Token)
 	if err != nil {
 		return err

@@ -59,7 +59,9 @@ pageSize = "A4" # Size of the page. Use one of "A4", "letter", or "legal".
 [toph]
 baseURL = "https://toph.co"
 token = "..."               # Collect your printd token from Toph Support. The token is contest-specific.
-contestID = "..."           # The 24 character hex ID of the contest goes here.
+
+[contest]
+id = "..." # The 24 character hex ID of the contest goes here.
 ```
 
 ## To-dos
