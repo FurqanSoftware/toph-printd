@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"time"
 
 	"github.com/BurntSushi/toml"
 )
@@ -16,6 +17,7 @@ type Config struct {
 		MarginLeft   float64
 		TabSize      int
 		KeepPDF      bool
+		DelayAfter   time.Duration
 	}
 	Printer struct {
 		Name     string

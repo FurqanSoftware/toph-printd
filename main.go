@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"log"
+	"time"
 )
 
 var (
@@ -36,6 +37,8 @@ func main() {
 		err = markPrintDone(ctx, cfg, pr)
 		catch(err)
 		log.Printf(".. Done")
+
+		time.Sleep(cfg.Printd.DelayAfter)
 	}
 }
 
