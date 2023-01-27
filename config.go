@@ -23,12 +23,10 @@ type Config struct {
 		Name     string
 		PageSize PageSize
 	}
-	Contest struct {
-		ID string
-	}
 	Toph struct {
-		BaseURL string
-		Token   string
+		BaseURL   string
+		Token     string
+		ContestID string
 	}
 }
 

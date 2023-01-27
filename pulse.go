@@ -9,7 +9,7 @@ import (
 
 func pulseLoop(cfg Config) {
 	for {
-		req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/printd/pulse?contest=%s", cfg.Toph.BaseURL, cfg.Contest.ID), nil)
+		req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/printd/pulse?contest=%s", cfg.Toph.BaseURL, cfg.Toph.ContestID), nil)
 		req.Header.Add("Authorization", "Printd "+cfg.Toph.Token)
 		if err != nil {
 			log.Println(err)
