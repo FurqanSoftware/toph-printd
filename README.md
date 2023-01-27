@@ -43,14 +43,15 @@ Usage of ./printd:
 
 ``` toml
 [printd]
-fontSize = 13     # In px. All text uses this same font size.
-lineHeight = 20   # In px. Must be larger than fontSize.
-marginTop = 50    # Margin at the top edge of each page.
-marginRight = 25  # ... on the right edge of each page.
-marginBottom = 50 # ... on the bottom edge of each page.
-marginLeft = 25   # ... on the left edge of each page.
-tabSize = 4       # Replaces tabs with this many spaces.
-keepPDF = true    # When true, does not delete generated PDF after print.
+fontSize = 13        # In px. All text uses this same font size.
+lineHeight = 20      # In px. Must be larger than fontSize.
+marginTop = 50       # Margin at the top edge of each page.
+marginRight = 25     # ... on the right edge of each page.
+marginBottom = 50    # ... on the bottom edge of each page.
+marginLeft = 25      # ... on the left edge of each page.
+tabSize = 4          # Replaces tabs with this many spaces.
+keepPDF = true       # When true, does not delete generated PDF after print.
+delayAfter = "500ms" # Delay forced after each print.
 
 [printer]
 name = "..."    # Name of the printer. Leave empty to use the system default.
