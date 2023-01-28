@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"time"
@@ -18,28 +20,37 @@ type Print struct {
 	ModifiedAt time.Time
 }
 
-func getNextPrint(ctx context.Context, cfg Config) (Print, error) {
+func getNextPrint(ctx context.Context, cfg Config) (pr Print, err error) {
+	b := bytes.Buffer{}
+
 	for {
 		req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/printd/contests/%s/next_print", cfg.Toph.BaseURL, cfg.Toph.ContestID), nil)
-		req.Header.Add("Authorization", "Printd "+cfg.Toph.Token)
 		if err != nil {
 			return Print{}, err
 		}
+		req.Header.Add("Authorization", "Printd "+cfg.Toph.Token)
 		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
-			return Print{}, err
+			return Print{}, tophError{"Could not reach Toph", err}
 		}
 		if resp.StatusCode == http.StatusNotFound {
 			resp.Body.Close()
 			time.Sleep(5 * time.Second)
 			continue
-		} else {
-			defer resp.Body.Close()
 		}
 
-		pr := Print{}
-		err = json.NewDecoder(resp.Body).Decode(&pr)
-		return pr, err
+		b.Reset()
+		_, err = io.Copy(&b, resp.Body)
+		if err != nil {
+			return Print{}, tophError{"Could not retrieve print", err}
+		}
+		resp.Body.Close()
+
+		err = json.NewDecoder(&b).Decode(&pr)
+		if err != nil {
+			return Print{}, tophError{"Could not parse response", err}
+		}
+		return pr, nil
 	}
 }
 
