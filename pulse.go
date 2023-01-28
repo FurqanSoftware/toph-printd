@@ -18,6 +18,7 @@ func pulseLoop(cfg Config) {
 		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
 			log.Println(err)
+			time.Sleep(5 * time.Second)
 			continue
 		}
 		resp.Body.Close()
