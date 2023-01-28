@@ -28,6 +28,8 @@ func main() {
 
 	ctx := context.Background()
 
+	checkDependencies()
+
 	log.Println("Loading configuration")
 	cfg, err := parseConfig()
 	catch(err)
