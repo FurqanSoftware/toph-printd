@@ -38,7 +38,6 @@ func main() {
 	for {
 		log.Println("Waiting for prints")
 		pr, err := getNextPrint(ctx, cfg)
-		fmt.Println(errors.Is(err, &tophError{}))
 		if errors.As(err, &tophError{}) {
 			log.Println(err)
 			time.Sleep(5 * time.Second)
