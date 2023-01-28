@@ -17,8 +17,6 @@ func main() {
 	flag.StringVar(&flagConfig, "config", "printd-config.toml", "path to configuration file")
 	flag.Parse()
 
-	log.SetFlags(0)
-
 	ctx := context.Background()
 
 	log.Println("Loading configuration")
