@@ -14,6 +14,15 @@ var (
 )
 
 func main() {
+	fmt.Println(`  ____       _       _      _ 
+ |  _ \ _ __(_)_ __ | |_ __| |
+` + " | |_) | '__| | '_ \\| __/ _` |" + `
+ |  __/| |  | | | | | || (_| |
+ |_|   |_|  |_|_| |_|\__\__,_|
+`)
+	fmt.Println("For Toph, By Furqan Software (https://furqansoftware.com)")
+	fmt.Println()
+
 	flag.StringVar(&flagConfig, "config", "printd-config.toml", "path to configuration file")
 	flag.Parse()
 
