@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"time"
 
@@ -74,6 +75,18 @@ func parseConfig() (cfg Config, err error) {
 		return
 	}
 	return
+}
+
+func validateConfig(cfg Config) {
+	if cfg.Toph.BaseURL == "" {
+		log.Fatalln(".. Incomplete configuration: missing Toph base URL")
+	}
+	if cfg.Toph.Token == "" {
+		log.Fatalln(".. Incomplete configuration: missing token")
+	}
+	if cfg.Toph.ContestID == "" {
+		log.Fatalln(".. Incomplete configuration: missing contest ID")
+	}
 }
 
 type PageSize string

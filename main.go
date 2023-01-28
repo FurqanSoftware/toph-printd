@@ -22,7 +22,7 @@ func main() {
 	log.Println("Loading configuration")
 	cfg, err := parseConfig()
 	catch(err)
-	log.Printf(".. %#v", cfg)
+	validateConfig(cfg)
 
 	go pulseLoop(cfg)
 
