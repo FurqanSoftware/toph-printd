@@ -4,6 +4,8 @@ import (
 	"log"
 	"os/exec"
 	"strconv"
+
+	"github.com/fatih/color"
 )
 
 func printPDF(cfg Config, name string) error {
@@ -19,6 +21,6 @@ func printPDF(cfg Config, name string) error {
 func checkDependencies() {
 	_, err := exec.LookPath(`.\PDFtoPrinter.exe`)
 	if err != nil {
-		log.Fatalln("Missing dependency: could not find PDFtoPrinter.exe")
+		log.Fatalln(color.RedString("[E]"), "Missing dependency: could not find PDFtoPrinter.exe")
 	}
 }

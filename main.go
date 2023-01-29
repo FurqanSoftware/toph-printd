@@ -11,6 +11,8 @@ import (
 	"sync"
 	"syscall"
 	"time"
+
+	"github.com/fatih/color"
 )
 
 var (
@@ -34,7 +36,7 @@ func main() {
 
 	checkDependencies()
 
-	log.Println("Loading configuration")
+	log.Println(color.BlueString("[i]"), "Loading configuration")
 	cfg, err := parseConfig()
 	catch(err)
 	validateConfig(cfg)
@@ -54,21 +56,21 @@ func main() {
 		delay := 0 * time.Second
 	L:
 		for {
-			log.Println("Waiting for prints")
+			log.Println(color.BlueString("[i]"), "Waiting for prints")
 			pr, err := getNextPrint(ctx, cfg)
 			if errors.As(err, &tophError{}) {
-				log.Println(err)
+				log.Println(color.RedString("[E]"), err)
 				delay = cfg.Printd.DelayError
 				goto retry
 			}
 			catch(err)
 
-			log.Printf("Printing %s", pr.ID)
+			log.Printf(color.BlueString("[i]"), "Printing %s", pr.ID)
 			err = runPrintJob(ctx, cfg, pr)
 			catch(err)
 			err = markPrintDone(ctx, cfg, pr)
 			catch(err)
-			log.Printf(".. Done")
+			log.Printf(color.BlueString("[i]"), ".. Done")
 
 			delay = cfg.Printd.DelayAfter
 
@@ -86,14 +88,14 @@ func main() {
 
 	select {
 	case sig := <-sigch:
-		log.Printf("Received %s", sig)
+		log.Printf(color.BlueString("[i]")+" Received %s", sig)
 	}
 
-	log.Println("Exiting")
+	log.Println(color.BlueString("[i]"), "Exiting")
 	close(exitch)
 	wg.Wait()
 
-	log.Println("Goodbye")
+	log.Println(color.BlueString("[i]"), "Goodbye")
 }
 
 func catch(err error) {

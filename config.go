@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
+	"github.com/fatih/color"
 )
 
 type Config struct {
@@ -81,13 +82,13 @@ func parseConfig() (cfg Config, err error) {
 
 func validateConfig(cfg Config) {
 	if cfg.Toph.BaseURL == "" {
-		log.Fatalln(".. Incomplete configuration: missing Toph base URL")
+		log.Fatalln(color.RedString("[E]"), "Incomplete configuration: missing Toph base URL")
 	}
 	if cfg.Toph.Token == "" {
-		log.Fatalln(".. Incomplete configuration: missing token")
+		log.Fatalln(color.RedString("[E]"), "Incomplete configuration: missing token")
 	}
 	if cfg.Toph.ContestID == "" {
-		log.Fatalln(".. Incomplete configuration: missing contest ID")
+		log.Fatalln(color.RedString("[E]"), "Incomplete configuration: missing contest ID")
 	}
 }
 

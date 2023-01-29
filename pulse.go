@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/fatih/color"
 )
 
 func pulseLoop(cfg Config, exitch chan struct{}) {
@@ -14,12 +16,12 @@ L:
 		req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/printd/pulse?contest=%s", cfg.Toph.BaseURL, cfg.Toph.ContestID), nil)
 		req.Header.Add("Authorization", "Printd "+cfg.Toph.Token)
 		if err != nil {
-			log.Println(err)
+			log.Println(color.RedString("[E]"), err)
 			goto retry
 		}
 		resp, err = http.DefaultClient.Do(req)
 		if err != nil {
-			log.Println(err)
+			log.Println(color.RedString("[E]"), err)
 			goto retry
 		}
 		resp.Body.Close()
