@@ -23,35 +23,32 @@ type Print struct {
 func getNextPrint(ctx context.Context, cfg Config) (pr Print, err error) {
 	b := bytes.Buffer{}
 
-	for {
-		req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/printd/contests/%s/next_print", cfg.Toph.BaseURL, cfg.Toph.ContestID), nil)
-		if err != nil {
-			return Print{}, err
-		}
-		req.Header.Add("Authorization", "Printd "+cfg.Toph.Token)
-		resp, err := http.DefaultClient.Do(req)
-		if err != nil {
-			return Print{}, tophError{"Could not reach Toph", err}
-		}
-		if resp.StatusCode == http.StatusNotFound {
-			resp.Body.Close()
-			time.Sleep(5 * time.Second)
-			continue
-		}
-
-		b.Reset()
-		_, err = io.Copy(&b, resp.Body)
-		if err != nil {
-			return Print{}, tophError{"Could not retrieve print", err}
-		}
-		resp.Body.Close()
-
-		err = json.NewDecoder(&b).Decode(&pr)
-		if err != nil {
-			return Print{}, tophError{"Could not parse response", err}
-		}
-		return pr, nil
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/printd/contests/%s/next_print", cfg.Toph.BaseURL, cfg.Toph.ContestID), nil)
+	if err != nil {
+		return Print{}, err
 	}
+	req.Header.Add("Authorization", "Printd "+cfg.Toph.Token)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return Print{}, tophError{"Could not reach Toph", err}
+	}
+	if resp.StatusCode == http.StatusNotFound {
+		resp.Body.Close()
+		return Print{}, nil
+	}
+
+	b.Reset()
+	_, err = io.Copy(&b, resp.Body)
+	if err != nil {
+		return Print{}, tophError{"Could not retrieve print", err}
+	}
+	resp.Body.Close()
+
+	err = json.NewDecoder(&b).Decode(&pr)
+	if err != nil {
+		return Print{}, tophError{"Could not parse response", err}
+	}
+	return pr, nil
 }
 
 func runPrintJob(ctx context.Context, cfg Config, pr Print) error {

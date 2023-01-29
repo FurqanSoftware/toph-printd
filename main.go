@@ -53,10 +53,10 @@ func main() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
+		log.Println(color.BlueString("[i]"), "Waiting for prints")
 		delay := 0 * time.Second
 	L:
 		for {
-			log.Println(color.BlueString("[i]"), "Waiting for prints")
 			pr, err := getNextPrint(ctx, cfg)
 			if errors.As(err, &tophError{}) {
 				log.Println(color.RedString("[E]"), err)
@@ -64,6 +64,10 @@ func main() {
 				goto retry
 			}
 			catch(err)
+			if pr.ID == "" {
+				delay = 5 * time.Second
+				goto retry
+			}
 
 			log.Printf(color.BlueString("[i]"), "Printing %s", pr.ID)
 			err = runPrintJob(ctx, cfg, pr)
