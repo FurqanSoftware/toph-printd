@@ -69,12 +69,12 @@ func main() {
 				goto retry
 			}
 
-			log.Printf(color.BlueString("[i]"), "Printing %s", pr.ID)
+			log.Printf(color.BlueString("[i]")+" Printing %s", pr.ID)
 			err = runPrintJob(ctx, cfg, pr)
 			catch(err)
 			err = markPrintDone(ctx, cfg, pr)
 			catch(err)
-			log.Printf(color.BlueString("[i]"), ".. Done")
+			log.Println(color.BlueString("[i]"), ".. Done")
 
 			delay = cfg.Printd.DelayAfter
 
