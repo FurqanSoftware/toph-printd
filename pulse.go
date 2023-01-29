@@ -14,14 +14,14 @@ L:
 	for {
 		var resp *http.Response
 		req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/printd/pulse?contest=%s", cfg.Toph.BaseURL, cfg.Toph.ContestID), nil)
-		req.Header.Add("Authorization", "Printd "+cfg.Toph.Token)
 		if err != nil {
 			log.Println(color.RedString("[E]"), err)
 			goto retry
 		}
+		req.Header.Add("Authorization", "Printd "+cfg.Toph.Token)
 		resp, err = http.DefaultClient.Do(req)
 		if err != nil {
-			log.Println(color.RedString("[E]"), err)
+			log.Println(color.RedString("[E]"), "Could not send pulse:", err)
 			goto retry
 		}
 		resp.Body.Close()
