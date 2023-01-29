@@ -34,9 +34,17 @@ Windows:
 
 ```
 » ./printd -h
-Usage of ./printd:
+  ____       _       _      _ 
+ |  _ \ _ __(_)_ __ | |_ __| |
+ | |_) | '__| | '_ \| __/ _` |
+ |  __/| |  | | | | | || (_| |
+ |_|   |_|  |_|_| |_|\__\__,_|
+
+For Toph, By Furqan Software (https://furqansoftware.com)
+
+Usage of /tmp/go-build71336074/b001/exe/toph-printd:
   -config string
-    	path to configuration file (default "printd-config.toml")
+      path to configuration file (default "printd-config.toml")
 ```
 
 ## Configuration
