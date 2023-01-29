@@ -36,10 +36,12 @@ func main() {
 
 	checkDependencies()
 
-	log.Println(color.BlueString("[i]"), "Loading configuration")
+	log.Println("[i]", "Loading configuration")
 	cfg, err := parseConfig()
 	catch(err)
 	validateConfig(cfg)
+
+	color.NoColor = !cfg.Printd.LogColor
 
 	wg := sync.WaitGroup{}
 	exitch := make(chan struct{})
@@ -53,7 +55,7 @@ func main() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		log.Println(color.BlueString("[i]"), "Waiting for prints")
+		log.Println("[i]", "Waiting for prints")
 		delay := 0 * time.Second
 	L:
 		for {
@@ -69,12 +71,12 @@ func main() {
 				goto retry
 			}
 
-			log.Printf(color.BlueString("[i]")+" Printing %s", pr.ID)
+			log.Printf("[i]"+" Printing %s", pr.ID)
 			err = runPrintJob(ctx, cfg, pr)
 			catch(err)
 			err = markPrintDone(ctx, cfg, pr)
 			catch(err)
-			log.Println(color.BlueString("[i]"), ".. Done")
+			log.Println("[i]", ".. Done")
 
 			delay = cfg.Printd.DelayAfter
 
@@ -92,14 +94,14 @@ func main() {
 
 	select {
 	case sig := <-sigch:
-		log.Printf(color.BlueString("[i]")+" Received %s", sig)
+		log.Printf("[i]"+" Received %s", sig)
 	}
 
-	log.Println(color.BlueString("[i]"), "Exiting")
+	log.Println("[i]", "Exiting")
 	close(exitch)
 	wg.Wait()
 
-	log.Println(color.BlueString("[i]"), "Goodbye")
+	log.Println("[i]", "Goodbye")
 }
 
 func catch(err error) {

@@ -32,6 +32,7 @@ type ConfigPrintd struct {
 	KeepPDF      bool
 	DelayAfter   time.Duration
 	DelayError   time.Duration
+	LogColor     bool
 }
 
 func (c *ConfigPrintd) initDefaults() {
@@ -45,6 +46,7 @@ func (c *ConfigPrintd) initDefaults() {
 	c.KeepPDF = true
 	c.DelayAfter = 500 * time.Millisecond
 	c.DelayError = 5 * time.Second
+	c.LogColor = true
 }
 
 type ConfigPrinter struct {
