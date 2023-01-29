@@ -6,6 +6,10 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"sync"
+	"syscall"
 	"time"
 )
 
@@ -35,27 +39,61 @@ func main() {
 	catch(err)
 	validateConfig(cfg)
 
-	go pulseLoop(cfg)
+	wg := sync.WaitGroup{}
+	exitch := make(chan struct{})
 
-	for {
-		log.Println("Waiting for prints")
-		pr, err := getNextPrint(ctx, cfg)
-		if errors.As(err, &tophError{}) {
-			log.Println(err)
-			time.Sleep(5 * time.Second)
-			continue
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		pulseLoop(cfg, exitch)
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		delay := 0 * time.Second
+	L:
+		for {
+			log.Println("Waiting for prints")
+			pr, err := getNextPrint(ctx, cfg)
+			if errors.As(err, &tophError{}) {
+				log.Println(err)
+				delay = cfg.Printd.DelayError
+				goto retry
+			}
+			catch(err)
+
+			log.Printf("Printing %s", pr.ID)
+			err = runPrintJob(ctx, cfg, pr)
+			catch(err)
+			err = markPrintDone(ctx, cfg, pr)
+			catch(err)
+			log.Printf(".. Done")
+
+			delay = cfg.Printd.DelayAfter
+
+		retry:
+			select {
+			case <-exitch:
+				break L
+			case <-time.After(delay):
+			}
 		}
-		catch(err)
+	}()
 
-		log.Printf("Printing %s", pr.ID)
-		err = runPrintJob(ctx, cfg, pr)
-		catch(err)
-		err = markPrintDone(ctx, cfg, pr)
-		catch(err)
-		log.Printf(".. Done")
+	sigch := make(chan os.Signal, 2)
+	signal.Notify(sigch, os.Interrupt, syscall.SIGTERM)
 
-		time.Sleep(cfg.Printd.DelayAfter)
+	select {
+	case sig := <-sigch:
+		log.Printf("Received %s", sig)
 	}
+
+	log.Println("Exiting")
+	close(exitch)
+	wg.Wait()
+
+	log.Println("Goodbye")
 }
 
 func catch(err error) {

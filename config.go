@@ -30,6 +30,7 @@ type ConfigPrintd struct {
 	TabSize      int
 	KeepPDF      bool
 	DelayAfter   time.Duration
+	DelayError   time.Duration
 }
 
 func (c *ConfigPrintd) initDefaults() {
@@ -42,6 +43,7 @@ func (c *ConfigPrintd) initDefaults() {
 	c.TabSize = 4
 	c.KeepPDF = true
 	c.DelayAfter = 500 * time.Millisecond
+	c.DelayError = 5 * time.Second
 }
 
 type ConfigPrinter struct {
