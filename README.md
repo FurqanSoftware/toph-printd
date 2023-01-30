@@ -60,6 +60,8 @@ marginLeft = 25      # ... on the left edge of each page.
 tabSize = 4          # Replaces tabs with this many spaces.
 keepPDF = true       # When true, does not delete generated PDF after print.
 delayAfter = "500ms" # Delay forced after each print.
+logColor = true      # Color certain parts of the logs.
+throbber = true      # Show an activity throbber below logs.
 
 [printer]
 name = "..."    # Name of the printer. Leave empty to use the system default.
