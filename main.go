@@ -20,6 +20,8 @@ var (
 )
 
 func main() {
+	log.SetPrefix("\033[2K\r")
+
 	fmt.Println(`  ____       _       _      _ 
  |  _ \ _ __(_)_ __ | |_ __| |
 ` + " | |_) | '__| | '_ \\| __/ _` |" + `
@@ -52,6 +54,11 @@ func main() {
 		pulseLoop(cfg, exitch)
 	}()
 
+	throbber := Throbber{}
+	if cfg.Printd.Throbber {
+		go throbber.Loop(cfg, exitch)
+	}
+
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
@@ -61,15 +68,20 @@ func main() {
 		for {
 			pr, err := getNextPrint(ctx, cfg)
 			if errors.As(err, &tophError{}) {
+				throbber.SetState(ThrobberOffline)
 				log.Println(color.RedString("[E]"), err)
 				delay = cfg.Printd.DelayError
 				goto retry
 			}
 			catch(err)
+
 			if pr.ID == "" {
+				throbber.SetState(ThrobberReady)
 				delay = 5 * time.Second
 				goto retry
 			}
+
+			throbber.SetState(ThrobberPrinting)
 
 			log.Printf("[i]"+" Printing %s", pr.ID)
 			err = runPrintJob(ctx, cfg, pr)

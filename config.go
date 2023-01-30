@@ -33,6 +33,7 @@ type ConfigPrintd struct {
 	DelayAfter   time.Duration
 	DelayError   time.Duration
 	LogColor     bool
+	Throbber     bool
 }
 
 func (c *ConfigPrintd) initDefaults() {
@@ -47,6 +48,7 @@ func (c *ConfigPrintd) initDefaults() {
 	c.DelayAfter = 500 * time.Millisecond
 	c.DelayError = 5 * time.Second
 	c.LogColor = true
+	c.Throbber = true
 }
 
 type ConfigPrinter struct {
