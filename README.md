@@ -1,5 +1,7 @@
 # Printd
 
+[![](https://img.shields.io/github/v/release/FurqanSoftware/toph-printd)](https://github.com/FurqanSoftware/toph-printd/releases) [![](https://img.shields.io/badge/support-community.toph.co-blue)](https://community.toph.co/c/support/printd/57)
+
 Allow participants to request prints right from within Toph. Process print jobs locally using Printd.
 
 ![](overview.png)
