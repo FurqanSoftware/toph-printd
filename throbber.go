@@ -43,7 +43,7 @@ L:
 			s += " Offline"
 		}
 		t.m.Unlock()
-		fmt.Fprintf(log.Default().Writer(), "\033[2K\r%s%s\r", pad, s)
+		fmt.Fprintf(log.Writer(), "\033[2K\r%s%s\r", pad, s)
 
 		select {
 		case <-exitch:

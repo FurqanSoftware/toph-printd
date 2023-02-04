@@ -21,15 +21,16 @@ var (
 
 func main() {
 	log.SetPrefix("\033[2K\r")
+	log.SetFlags(log.Ldate | log.Ltime)
 
-	fmt.Println(`  ____       _       _      _ 
+	fmt.Fprintln(log.Writer(), `  ____       _       _      _ 
  |  _ \ _ __(_)_ __ | |_ __| |
-` + " | |_) | '__| | '_ \\| __/ _` |" + `
+`+" | |_) | '__| | '_ \\| __/ _` |"+`
  |  __/| |  | | | | | || (_| |
  |_|   |_|  |_|_| |_|\__\__,_|
 `)
-	fmt.Println("For Toph, By Furqan Software (https://furqansoftware.com)")
-	fmt.Println()
+	fmt.Fprintln(log.Writer(), "For Toph, By Furqan Software (https://furqansoftware.com)")
+	fmt.Fprintln(log.Writer())
 
 	flag.StringVar(&flagConfig, "config", "printd-config.toml", "path to configuration file")
 	flag.Parse()
