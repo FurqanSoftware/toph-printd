@@ -12,6 +12,8 @@ If the computer with the printer has Linux on it, you will need to ensure that C
 
 You will also need a [configuration file](#configuration) for Printd. This configuration file is contest-specific. You can download this configuration file from Toph once the printing feature is enabled for your contest.
 
+_If you have any questions or want to report issues about Printd, please [post about it on Toph Community](https://community.toph.co/new-topic?category=support/printd)._
+
 ## Example
 
 [An example](example/example.pdf) is included in this repository.
