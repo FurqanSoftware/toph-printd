@@ -17,6 +17,9 @@ import (
 
 var (
 	flagConfig string
+
+	buildTag  = "debug"
+	buildTime = ""
 )
 
 func main() {
@@ -27,9 +30,20 @@ func main() {
  |  _ \ _ __(_)_ __ | |_ __| |
 `+" | |_) | '__| | '_ \\| __/ _` |"+`
  |  __/| |  | | | | | || (_| |
- |_|   |_|  |_|_| |_|\__\__,_|
-`)
+ |_|   |_|  |_|_| |_|\__\__,_|`)
+	fmt.Fprintln(log.Writer())
 	fmt.Fprintln(log.Writer(), "For Toph, By Furqan Software (https://furqansoftware.com)")
+	fmt.Fprintln(log.Writer())
+
+	fmt.Fprintf(log.Writer(), "» Release: %s", buildTag)
+	if buildTime != "" {
+		fmt.Fprintf(log.Writer(), " (%s)", buildTime)
+	}
+	fmt.Fprintln(log.Writer())
+	fmt.Fprintln(log.Writer())
+
+	fmt.Fprintln(log.Writer(), "» Project: https://github.com/FurqanSoftware/toph-printd")
+	fmt.Fprintln(log.Writer(), "» Support: https://community.toph.co/c/support/printd/57")
 	fmt.Fprintln(log.Writer())
 
 	flag.StringVar(&flagConfig, "config", "printd-config.toml", "path to configuration file")
