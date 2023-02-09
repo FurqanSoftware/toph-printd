@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"sync"
@@ -59,6 +60,8 @@ func main() {
 	validateConfig(cfg)
 
 	color.NoColor = !cfg.Printd.LogColor
+
+	http.DefaultClient.Timeout = cfg.Toph.Timeout
 
 	wg := sync.WaitGroup{}
 	exitch := make(chan struct{})

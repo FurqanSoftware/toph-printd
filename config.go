@@ -64,10 +64,12 @@ type ConfigToph struct {
 	BaseURL   string
 	Token     string
 	ContestID string
+	Timeout   time.Duration
 }
 
 func (c *ConfigToph) initDefaults() {
 	c.BaseURL = "https://toph.co"
+	c.Timeout = 10 * time.Second
 }
 
 func parseConfig() (cfg Config, err error) {
