@@ -14,6 +14,10 @@ archives:
       windows: Windows
       386: i386
       amd64: x86_64
+    files:
+      - LICENSE.txt
+      - README.md
+      - UBUNTU_FONT_LICENCE.txt
 release:
   github:
     owner: FurqanSoftware
