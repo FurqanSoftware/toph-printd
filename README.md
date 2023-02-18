@@ -83,6 +83,19 @@ contestID = "..."           # The 24 character hex ID of the contest goes here.
 timeout = "10s"             # Timeout duration for HTTP client.
 ```
 
+## Frequently Asked Questions
+
+<details open>
+<summary><b>Prints are missing a few lines of text near the bottom edge of the paper. They don't appear on the next page either. How can I increase the bottom margin of the prints?</b></summary>
+
+This may happen when the printer cannot print content close to the bottom edge of the papers.
+
+Open the configuration file and modify the `marginBottom` parameter under the `[printd]` section. Increase the value until enough margin is left so the printer doesn't lose content near the bottom edge of the papers.
+
+If the `marginBottom` parameter is not present in the configuration file, you may add it under the `[printd]` section.
+
+</details>
+
 ## To-dos
 
 - [x] Windows support
