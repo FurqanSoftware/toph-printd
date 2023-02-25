@@ -65,7 +65,7 @@ func main() {
 		if cfg.Printer.Name != "" {
 			log.Fatalln(color.RedString("[E]"), fmt.Sprintf("Printer %s does not exist", cfg.Printer.Name))
 		} else {
-			log.Fatalln(color.RedString("[E]"), fmt.Sprintf("No printer exists"))
+			log.Fatalln(color.RedString("[E]"), "No printer exists")
 		}
 	}
 
@@ -111,6 +111,7 @@ func main() {
 			throbber.SetState(ThrobberPrinting)
 
 			log.Printf("[i]"+" Printing %s", pr.ID)
+			panic(true)
 			err = runPrintJob(ctx, cfg, pr)
 			catch(err)
 			err = markPrintDone(ctx, cfg, pr)
