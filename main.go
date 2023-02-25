@@ -122,10 +122,8 @@ func main() {
 	sigch := make(chan os.Signal, 2)
 	signal.Notify(sigch, os.Interrupt, syscall.SIGTERM)
 
-	select {
-	case sig := <-sigch:
-		log.Printf("[i]"+" Received %s", sig)
-	}
+	sig := <-sigch
+	log.Printf("[i]"+" Received %s", sig)
 
 	log.Println("[i]", "Exiting")
 	close(exitch)
