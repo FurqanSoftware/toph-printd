@@ -67,11 +67,12 @@ marginRight = 25     # ... at the right edge of each page.
 marginBottom = 50    # ... at the bottom edge of each page.
 marginLeft = 25      # ... at the left edge of each page.
 tabSize = 4          # Replaces tabs with this many spaces.
-headerExtra = ""     # Extra text to add to the page header.
-keepPDF = true       # When true, does not delete generated PDF after print.
-delayAfter = "500ms" # Delay forced after each print.
-logColor = true      # Color certain parts of the logs.
-throbber = true      # Show an activity throbber below logs.
+headerExtra = ""     # Appends extra text to the page header.
+keepPDF = true       # Does not delete generated PDF after print.
+delayAfter = "500ms" # Forces a delay after each print.
+delayError = "5s"    # Forces a delay after an error.
+logColor = true      # Colors certain parts of the logs.
+throbber = true      # Shows an activity throbber below logs.
 
 [printer]
 name = "..."    # Name of the printer. Leave empty to use the system default.
