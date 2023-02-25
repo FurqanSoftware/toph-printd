@@ -52,6 +52,10 @@ func (b PDFBuilder) Build(name string, pr Print) error {
 		return err
 	}
 
+	if b.cfg.Printd.ReduceBlankLines {
+		lines = reduceBlankLines(lines)
+	}
+
 	npages := int((len(lines) + (linesperpage)) / linesperpage)
 
 	pageno := 0
@@ -116,3 +120,17 @@ var (
 
 //go:embed UbuntuMono-R.ttf
 var ubuntuMonoR []byte
+
+func reduceBlankLines(lines []string) []string {
+	reduced := lines[:0]
+	lastblank := false
+	for _, l := range lines {
+		blank := strings.TrimSpace(l) == ""
+		if lastblank && blank {
+			continue
+		}
+		reduced = append(reduced, l)
+		lastblank = blank
+	}
+	return reduced
+}

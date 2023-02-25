@@ -60,19 +60,20 @@ Usage of /tmp/go-build71336074/b001/exe/toph-printd:
 
 ``` toml
 [printd]
-fontSize = 13        # In px. All text uses this same font size.
-lineHeight = 20      # In px. It must be larger than the font size.
-marginTop = 50       # Margin at the top edge of each page.
-marginRight = 25     # ... at the right edge of each page.
-marginBottom = 50    # ... at the bottom edge of each page.
-marginLeft = 25      # ... at the left edge of each page.
-tabSize = 4          # Replaces tabs with this many spaces.
-headerExtra = ""     # Appends extra text to the page header.
-keepPDF = true       # Does not delete generated PDF after print.
-delayAfter = "500ms" # Forces a delay after each print.
-delayError = "5s"    # Forces a delay after an error.
-logColor = true      # Colors certain parts of the logs.
-throbber = true      # Shows an activity throbber below logs.
+fontSize = 13            # In px. All text uses this same font size.
+lineHeight = 20          # In px. It must be larger than the font size.
+marginTop = 50           # Margin at the top edge of each page.
+marginRight = 25         # ... at the right edge of each page.
+marginBottom = 50        # ... at the bottom edge of each page.
+marginLeft = 25          # ... at the left edge of each page.
+tabSize = 4              # Replaces tabs with this many spaces.
+headerExtra = ""         # Appends extra text to the page header.
+reduceBlankLines = false # Replaces consecutive blank lines with one.
+keepPDF = true           # Does not delete generated PDF after print.
+delayAfter = "500ms"     # Forces a delay after each print.
+delayError = "5s"        # Forces a delay after an error.
+logColor = true          # Colors certain parts of the logs.
+throbber = true          # Shows an activity throbber below logs.
 
 [printer]
 name = "..."    # Name of the printer. Leave empty to use the system default.

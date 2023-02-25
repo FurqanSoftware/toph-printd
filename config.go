@@ -22,19 +22,20 @@ func (c *Config) initDefaults() {
 }
 
 type ConfigPrintd struct {
-	FontSize     int
-	LineHeight   float64
-	MarginTop    float64
-	MarginRight  float64
-	MarginBottom float64
-	MarginLeft   float64
-	TabSize      int
-	HeaderExtra  string
-	KeepPDF      bool
-	DelayAfter   time.Duration
-	DelayError   time.Duration
-	LogColor     bool
-	Throbber     bool
+	FontSize         int
+	LineHeight       float64
+	MarginTop        float64
+	MarginRight      float64
+	MarginBottom     float64
+	MarginLeft       float64
+	TabSize          int
+	HeaderExtra      string
+	ReduceBlankLines bool
+	KeepPDF          bool
+	DelayAfter       time.Duration
+	DelayError       time.Duration
+	LogColor         bool
+	Throbber         bool
 }
 
 func (c *ConfigPrintd) initDefaults() {
@@ -46,6 +47,7 @@ func (c *ConfigPrintd) initDefaults() {
 	c.MarginLeft = 25
 	c.TabSize = 4
 	c.HeaderExtra = ""
+	c.ReduceBlankLines = false
 	c.KeepPDF = true
 	c.DelayAfter = 500 * time.Millisecond
 	c.DelayError = 5 * time.Second
