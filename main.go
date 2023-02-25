@@ -93,7 +93,8 @@ func main() {
 	L:
 		for {
 			pr, err := getNextPrint(ctx, cfg)
-			if errors.As(err, &tophError{}) {
+			var terr tophError
+			if errors.As(err, &terr) {
 				throbber.SetState(ThrobberOffline)
 				log.Println(color.RedString("[E]"), err)
 				delay = cfg.Printd.DelayError

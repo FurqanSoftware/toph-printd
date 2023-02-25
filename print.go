@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -33,9 +32,12 @@ func getNextPrint(ctx context.Context, cfg Config) (pr Print, err error) {
 	if err != nil {
 		return Print{}, tophError{"Could not reach Toph", err}
 	}
-	if resp.StatusCode == http.StatusNotFound {
-		resp.Body.Close()
+	defer resp.Body.Close()
+	switch resp.StatusCode {
+	case http.StatusNotFound:
 		return Print{}, nil
+	case http.StatusForbidden:
+		return Print{}, tophError{"Could not retrieve print", errInvalidToken}
 	}
 
 	b.Reset()
@@ -43,7 +45,6 @@ func getNextPrint(ctx context.Context, cfg Config) (pr Print, err error) {
 	if err != nil {
 		return Print{}, tophError{"Could not retrieve print", err}
 	}
-	resp.Body.Close()
 
 	err = json.NewDecoder(&b).Decode(&pr)
 	if err != nil {
@@ -90,7 +91,3 @@ func markPrintDone(ctx context.Context, cfg Config, pr Print) error {
 
 	return nil
 }
-
-var (
-	errPrinterNotExist = errors.New("printer does not exist")
-)

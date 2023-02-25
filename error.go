@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type tophError struct {
 	msg string
@@ -14,3 +17,8 @@ func (e tophError) Error() string {
 func (e tophError) Unwrap() error {
 	return e.err
 }
+
+var (
+	errInvalidToken    = errors.New("invalid token")
+	errPrinterNotExist = errors.New("printer does not exist")
+)
