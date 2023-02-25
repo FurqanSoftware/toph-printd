@@ -61,11 +61,11 @@ Usage of /tmp/go-build71336074/b001/exe/toph-printd:
 ``` toml
 [printd]
 fontSize = 13        # In px. All text uses this same font size.
-lineHeight = 20      # In px. Must be larger than fontSize.
+lineHeight = 20      # In px. It must be larger than the font size.
 marginTop = 50       # Margin at the top edge of each page.
-marginRight = 25     # ... on the right edge of each page.
-marginBottom = 50    # ... on the bottom edge of each page.
-marginLeft = 25      # ... on the left edge of each page.
+marginRight = 25     # ... at the right edge of each page.
+marginBottom = 50    # ... at the bottom edge of each page.
+marginLeft = 25      # ... at the left edge of each page.
 tabSize = 4          # Replaces tabs with this many spaces.
 keepPDF = true       # When true, does not delete generated PDF after print.
 delayAfter = "500ms" # Delay forced after each print.
@@ -78,8 +78,8 @@ pageSize = "A4" # Size of the page. Use one of "A4", "letter", or "legal".
 
 [toph]
 baseURL = "https://toph.co"
-token = "..."               # Collect your printd token from Toph Support. The token is contest-specific.
-contestID = "..."           # The 24 character hex ID of the contest goes here.
+token = "..."               # Collect your Printd token from Toph Support. The token is contest-specific.
+contestID = "..."           # The 24-character hex ID of the contest goes here.
 timeout = "10s"             # Timeout duration for HTTP client.
 ```
 
