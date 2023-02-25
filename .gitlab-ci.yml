@@ -43,7 +43,7 @@ test:
   image: cardboard/golang:1.19.4
   stage: test
   script:
-  - go test -v .
+  - make test
   rules:
   - changes:
     - "**/*.go"
