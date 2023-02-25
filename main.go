@@ -60,6 +60,14 @@ func main() {
 	color.NoColor = !cfg.Printd.LogColor
 
 	checkDependencies()
+	err = checkPrinter(cfg)
+	if errors.Is(err, errPrinterNotExist) {
+		if cfg.Printer.Name != "" {
+			log.Fatalln(color.RedString("[E]"), fmt.Sprintf("Printer %s does not exist", cfg.Printer.Name))
+		} else {
+			log.Fatalln(color.RedString("[E]"), fmt.Sprintf("No printer exists"))
+		}
+	}
 
 	http.DefaultClient.Timeout = cfg.Toph.Timeout
 

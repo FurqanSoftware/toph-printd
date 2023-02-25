@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -89,3 +90,7 @@ func markPrintDone(ctx context.Context, cfg Config, pr Print) error {
 
 	return nil
 }
+
+var (
+	errPrinterNotExist = errors.New("printer does not exist")
+)

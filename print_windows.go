@@ -24,3 +24,8 @@ func checkDependencies() {
 		log.Fatalln(color.RedString("[E]"), "Missing dependency: could not find PDFtoPrinter.exe")
 	}
 }
+
+func checkPrinter(cfg Config) error {
+	// TODO: We have to implement printer check for Windows.
+	return nil
+}
