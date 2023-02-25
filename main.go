@@ -52,14 +52,14 @@ func main() {
 
 	ctx := context.Background()
 
-	checkDependencies()
-
 	log.Println("[i]", "Loading configuration")
 	cfg, err := parseConfig()
 	catch(err)
 	validateConfig(cfg)
 
 	color.NoColor = !cfg.Printd.LogColor
+
+	checkDependencies()
 
 	http.DefaultClient.Timeout = cfg.Toph.Timeout
 
