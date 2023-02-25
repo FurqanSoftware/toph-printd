@@ -29,6 +29,7 @@ type ConfigPrintd struct {
 	MarginBottom float64
 	MarginLeft   float64
 	TabSize      int
+	HeaderExtra  string
 	KeepPDF      bool
 	DelayAfter   time.Duration
 	DelayError   time.Duration
@@ -44,6 +45,7 @@ func (c *ConfigPrintd) initDefaults() {
 	c.MarginBottom = 50
 	c.MarginLeft = 25
 	c.TabSize = 4
+	c.HeaderExtra = ""
 	c.KeepPDF = true
 	c.DelayAfter = 500 * time.Millisecond
 	c.DelayError = 5 * time.Second

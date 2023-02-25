@@ -35,7 +35,12 @@ func (b PDFBuilder) Build(name string, pr Print) error {
 
 	linesperpage := int((pagesize.H - (b.cfg.Printd.MarginTop + b.cfg.Printd.MarginBottom)) / b.cfg.Printd.LineHeight)
 
-	headerlines, err := pdf.SplitText(pr.Header, pagesize.W-pdf.MarginLeft()-pdf.MarginRight())
+	header := pr.Header
+	headerextra := strings.TrimSpace(b.cfg.Printd.HeaderExtra)
+	if headerextra != "" {
+		header += " · " + headerextra
+	}
+	headerlines, err := pdf.SplitText(header, pagesize.W-pdf.MarginLeft()-pdf.MarginRight())
 	if err != nil {
 		return err
 	}
