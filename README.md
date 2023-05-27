@@ -51,7 +51,7 @@ For Toph, By Furqan Software (https://furqansoftware.com)
 » Project: https://github.com/FurqanSoftware/toph-printd
 » Support: https://community.toph.co/c/support/printd/57
 
-Usage of /tmp/go-build71336074/b001/exe/toph-printd:
+Usage of ./printd:
   -config string
       path to configuration file (default "printd-config.toml")
 ```
