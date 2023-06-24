@@ -21,6 +21,9 @@ var (
 
 	buildTag  = "debug"
 	buildTime = ""
+
+	repoOwner = "FurqanSoftware"
+	repoName  = "toph-printd"
 )
 
 func main() {
@@ -43,7 +46,7 @@ func main() {
 	fmt.Fprintln(log.Writer())
 	fmt.Fprintln(log.Writer())
 
-	fmt.Fprintln(log.Writer(), "» Project: https://github.com/FurqanSoftware/toph-printd")
+	fmt.Fprintf(log.Writer(), "» Project: https://github.com/%s/%s\n", repoOwner, repoName)
 	fmt.Fprintln(log.Writer(), "» Support: https://community.toph.co/c/support/printd/57")
 	fmt.Fprintln(log.Writer())
 
@@ -56,6 +59,11 @@ func main() {
 	cfg, err := parseConfig()
 	catch(err)
 	validateConfig(cfg)
+
+	err = checkUpdate(ctx)
+	if err != nil {
+		log.Println(color.HiYellowString("[W]"), "Could not check for updates")
+	}
 
 	color.NoColor = !cfg.Printd.LogColor
 
