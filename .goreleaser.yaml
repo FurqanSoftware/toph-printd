@@ -9,12 +9,7 @@ builds:
       - linux
       - windows
 archives:
-  - replacements:
-      linux: Linux
-      windows: Windows
-      386: i386
-      amd64: x86_64
-    files:
+  - files:
       - LICENSE.txt
       - README.md
       - UBUNTU_FONT_LICENCE.txt
