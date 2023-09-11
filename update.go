@@ -14,7 +14,9 @@ func checkUpdate(ctx context.Context) error {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	if !semver.IsValid(buildTag) {
+	version := "v" + version
+
+	if !semver.IsValid(version) {
 		return nil
 	}
 
@@ -27,7 +29,7 @@ func checkUpdate(ctx context.Context) error {
 		return nil
 	}
 
-	if semver.Compare(*rel.TagName, buildTag) > 0 {
+	if semver.Compare(*rel.TagName, version) > 0 {
 		log.Printf("%s Update available (%s)", color.HiYellowString("[W]"), *rel.TagName)
 	}
 

@@ -19,8 +19,10 @@ import (
 var (
 	flagConfig string
 
-	buildTag  = "debug"
-	buildTime = ""
+	version = ""
+	commit  = ""
+	date    = ""
+	builtBy = ""
 
 	repoOwner = "FurqanSoftware"
 	repoName  = "toph-printd"
@@ -39,9 +41,9 @@ func main() {
 	fmt.Fprintln(log.Writer(), "For Toph, By Furqan Software (https://furqansoftware.com)")
 	fmt.Fprintln(log.Writer())
 
-	fmt.Fprintf(log.Writer(), "» Release: %s", buildTag)
-	if buildTime != "" {
-		fmt.Fprintf(log.Writer(), " (%s)", buildTime)
+	fmt.Fprintf(log.Writer(), "» Release: %s", version)
+	if date != "" {
+		fmt.Fprintf(log.Writer(), " (%s)", date)
 	}
 	fmt.Fprintln(log.Writer())
 	fmt.Fprintln(log.Writer())
