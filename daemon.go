@@ -49,7 +49,7 @@ func (d Daemon) iter(ctx context.Context) (stop bool, delay time.Duration) {
 	var perr noNextPrintError
 	if errors.As(err, &perr) {
 		if perr.contestLocked {
-			pog.Info("Contest is locked")
+			d.pog.Info("Contest is locked")
 			d.abortCh <- err
 			return true, 0
 		}
