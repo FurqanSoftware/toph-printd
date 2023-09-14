@@ -99,6 +99,17 @@ If the `marginBottom` parameter is not present in the configuration file, you ma
 
 </details>
 
+<details open>
+<summary><b>Why does Windows show the "This app can't run on your PC" error when running printd.exe?</b></summary>
+
+Please ensure you have downloaded the correct Printd binary for your computer and Windows architecture.
+
+We release Printd binaries for 386, amd64, and arm64 architectures.
+
+[Confirm the architecture of Windows](https://support.microsoft.com/en-us/windows/32-bit-and-64-bit-windows-frequently-asked-questions-c6ca9541-8dce-4d48-0415-94a3faa2e13d) you are currently using. Depending on whether you have a 32-bit Windows or a 64-bit Windows, you will have to choose the 386 or amd64 variant, respectively. If you are running Windows on a 64-bit ARM CPU, you will need the arm64 variant.
+
+</details>
+
 ## To-dos
 
 - [x] Windows support
