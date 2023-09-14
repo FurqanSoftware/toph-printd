@@ -1,7 +1,5 @@
 github.com/BurntSushi/toml v1.2.1 h1:9F2/+DoOYIOksmaJFPw1tGFy1eDnIJXg+UHjuD8lTak=
 github.com/BurntSushi/toml v1.2.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
-github.com/FurqanSoftware/pog v0.0.0-20230914102056-3aa5f823ec95 h1:QziYlDhaqpxLzMhxU2P7jmQgMVcdrHvO/6XdxxwaaDU=
-github.com/FurqanSoftware/pog v0.0.0-20230914102056-3aa5f823ec95/go.mod h1:6n1FIN0aJ9TpDjsLjFna/AJFNqAM3ZbwecF8wyd+QxE=
 github.com/FurqanSoftware/pog v0.0.0-20230914124239-d67a41584f01 h1:o0tXHfCqcAzzZJIbAtViA4TP8NewknAsscIDrjw8ZJM=
 github.com/FurqanSoftware/pog v0.0.0-20230914124239-d67a41584f01/go.mod h1:6n1FIN0aJ9TpDjsLjFna/AJFNqAM3ZbwecF8wyd+QxE=
 github.com/ProtonMail/go-crypto v0.0.0-20230217124315-7d5c6f04bbb8 h1:wPbRQzjjwFc0ih8puEVAOFGELsn1zoIIYdxvML7mDxA=
@@ -76,6 +74,7 @@ google.golang.org/protobuf v1.26.0-rc.1/go.mod h1:jlhhOSvTdKEhbULTjvd4ARK9grFBp0
 google.golang.org/protobuf v1.26.0/go.mod h1:9q0QmTI4eRPtz6boOQmLYwt+qCgq0jsYwAQnmE0givc=
 google.golang.org/protobuf v1.28.0 h1:w43yiav+6bVFTBQFZX0r7ipe9JQ1QsbMgHwbBziscLw=
 google.golang.org/protobuf v1.28.0/go.mod h1:HV8QOd/L58Z+nl8r43ehVNZIU/HEI6OcFqwMG9pJV4I=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
 gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
