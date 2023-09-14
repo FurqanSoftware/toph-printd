@@ -5,6 +5,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -59,6 +60,9 @@ func main() {
 
 	log.Println("[i]", "Loading configuration")
 	cfg, err := parseConfig()
+	if errors.Is(err, fs.ErrNotExist) {
+		log.Fatalln(color.RedString("[E]"), fmt.Sprintf("Configuration file %s does not exist", flagConfig))
+	}
 	catch(err)
 	validateConfig(cfg)
 
