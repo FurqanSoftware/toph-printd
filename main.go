@@ -128,7 +128,6 @@ func main() {
 			throbber.SetState(ThrobberPrinting)
 
 			log.Printf("[i]"+" Printing %s", pr.ID)
-			panic(true)
 			err = runPrintJob(ctx, cfg, pr)
 			catch(err)
 			err = markPrintDone(ctx, cfg, pr)
