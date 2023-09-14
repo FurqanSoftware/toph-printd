@@ -146,8 +146,6 @@ func testDaemon(t *testing.T, token, contestid string, queue *Queue) (donePrintI
 	ctx := context.Background()
 	cfg := Config{}
 	cfg.initDefaults()
-	cfg.Printd.KeepPDF = true
-	cfg.Printer.PageSize = PageA4
 	cfg.Toph.BaseURL = srv.URL
 	cfg.Toph.Token = token
 	cfg.Toph.ContestID = contestid
