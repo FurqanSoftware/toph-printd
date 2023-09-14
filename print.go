@@ -85,7 +85,7 @@ func markPrintDone(ctx context.Context, cfg Config, pr Print) error {
 	}
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return err
+		return retryableError{tophError{"Could not reach Toph", err}}
 	}
 	defer resp.Body.Close()
 

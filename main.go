@@ -14,6 +14,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/avast/retry-go"
 	"github.com/fatih/color"
 )
 
@@ -145,7 +146,24 @@ func main() {
 			log.Printf("[i]"+" Printing %s", pr.ID)
 			err = runPrintJob(ctx, cfg, pr)
 			catch(err)
-			err = markPrintDone(ctx, cfg, pr)
+			err = retry.Do(func() error {
+				return markPrintDone(ctx, cfg, pr)
+			},
+				retry.RetryIf(func(err error) bool { return errors.As(err, &retryableError{}) }),
+				retry.Attempts(3),
+				retry.Delay(500*time.Millisecond),
+				retry.LastErrorOnly(true),
+			)
+			if errors.As(err, &terr) {
+				throbber.SetState(ThrobberOffline)
+				log.Println(color.RedString("[E]"), err)
+				if !errors.As(err, &retryableError{}) {
+					close(abortch)
+					break L
+				}
+				delay = cfg.Printd.DelayError
+				goto retry
+			}
 			catch(err)
 			log.Println("[i]", ".. Done")
 
