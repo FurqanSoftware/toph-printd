@@ -39,16 +39,23 @@ func (b PDFBuilder) Build(name string, pr Print) error {
 	if headerextra != "" {
 		header += " · " + headerextra
 	}
-	headerlines, err := pdf.SplitText(header, pagesize.W-pdf.MarginLeft()-pdf.MarginRight())
-	if err != nil {
-		return err
+	var headerlines []string
+	if header != "" {
+		headerlines, err = pdf.SplitText(header, pagesize.W-pdf.MarginLeft()-pdf.MarginRight())
+		if err != nil {
+			return err
+		}
 	}
 
 	linesperpage -= len(headerlines) + 2
 
-	lines, err := pdf.SplitText(b.tabToSpaces(pr.Content), pagesize.W-pdf.MarginLeft()-pdf.MarginRight())
-	if err != nil {
-		return err
+	content := b.tabToSpaces(pr.Content)
+	var lines []string
+	if content != "" {
+		lines, err = pdf.SplitText(content, pagesize.W-pdf.MarginLeft()-pdf.MarginRight())
+		if err != nil {
+			return err
+		}
 	}
 
 	if b.cfg.Printd.ReduceBlankLines {
