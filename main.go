@@ -60,8 +60,11 @@ func main() {
 
 	log.Println("[i]", "Loading configuration")
 	cfg, err := parseConfig()
-	if errors.Is(err, fs.ErrNotExist) {
+	switch {
+	case errors.Is(err, fs.ErrNotExist):
 		log.Fatalln(color.RedString("[E]"), fmt.Sprintf("Configuration file %s does not exist", flagConfig))
+	case err != nil:
+		log.Fatalln(color.RedString("[E]"), fmt.Sprintf("Could not parse configuration file"))
 	}
 	catch(err)
 	validateConfig(cfg)
