@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"sync"
 	"testing"
 
@@ -30,7 +31,9 @@ func TestPrintLoop(t *testing.T) {
 	}))
 
 	assert.FileExists(t, "6502f46b17592a5a9e870928.pdf")
+	os.Remove("6502f46b17592a5a9e870928.pdf")
 	assert.FileExists(t, "6502f9bf92c75c2f7874698e.pdf")
+	os.Remove("6502f9bf92c75c2f7874698e.pdf")
 
 	assert.Equal(t, []string{
 		"6502f46b17592a5a9e870928",
@@ -49,6 +52,7 @@ func TestPrintLoopEmptyHeader(t *testing.T) {
 	}))
 
 	assert.FileExists(t, "6502fec79eed503a402e0b59.pdf")
+	os.Remove("6502fec79eed503a402e0b59.pdf")
 
 	assert.Equal(t, []string{
 		"6502fec79eed503a402e0b59",
@@ -66,6 +70,7 @@ func TestPrintLoopEmptyContent(t *testing.T) {
 	}))
 
 	assert.FileExists(t, "6502fecc74093fd44c060e11.pdf")
+	os.Remove("6502fecc74093fd44c060e11.pdf")
 
 	assert.Equal(t, []string{
 		"6502fecc74093fd44c060e11",
@@ -90,7 +95,9 @@ func TestPrintLoopBreak(t *testing.T) {
 	}))
 
 	assert.FileExists(t, "6502fed2ee36d5244aade158.pdf")
+	os.Remove("6502fed2ee36d5244aade158.pdf")
 	assert.FileExists(t, "6502fed88ea6c9620b82bf5a.pdf")
+	os.Remove("6502fed88ea6c9620b82bf5a.pdf")
 
 	assert.Equal(t, []string{
 		"6502fed2ee36d5244aade158",
