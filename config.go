@@ -60,7 +60,7 @@ type ConfigPrinter struct {
 }
 
 func (c *ConfigPrinter) initDefaults() {
-	c.PageSize = "A4"
+	c.PageSize = PageA4
 }
 
 type ConfigToph struct {
