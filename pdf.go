@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/FurqanSoftware/pog"
 	"github.com/signintech/gopdf"
@@ -35,6 +36,7 @@ func (b PDFBuilder) Build(name string, pr Print) error {
 	linesperpage := int((pagesize.H - (b.cfg.Printd.MarginTop + b.cfg.Printd.MarginBottom)) / b.cfg.Printd.LineHeight)
 
 	header := pr.Header
+	header += " · " + pr.CreatedAt.In(time.Local).Format(time.DateTime)
 	headerextra := strings.TrimSpace(b.cfg.Printd.HeaderExtra)
 	if headerextra != "" {
 		header += " · " + headerextra
