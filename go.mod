@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/BurntSushi/toml v1.2.1
-	github.com/FurqanSoftware/pog v0.0.0-20230914102056-3aa5f823ec95
+	github.com/FurqanSoftware/pog v0.0.0-20230914124239-d67a41584f01
 	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/fatih/color v1.14.1
 	github.com/google/go-cmp v0.5.9

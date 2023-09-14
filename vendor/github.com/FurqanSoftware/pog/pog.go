@@ -169,6 +169,10 @@ func InitDefault() {
 	defaultPogger = NewPogger(log.Default().Writer(), log.Default().Prefix(), log.Default().Flags())
 }
 
+func Default() *Pogger {
+	return defaultPogger
+}
+
 func SetStatus(status Status)        { defaultPogger.SetStatus(status) }
 func Debug(v ...any)                 { defaultPogger.Debug(v...) }
 func Debugln(v ...any)               { defaultPogger.Debugln(v...) }
