@@ -17,8 +17,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPrintLoop(t *testing.T) {
-	donePrintIDs := testPrintLoop(t, "ZnZ0eW81bWw1NjMzc2dlYjI5azVuNThleDVzYjZ1aG8=", "6502f105025832238e865526", NewQueue([]*Print{
+func TestDaemon(t *testing.T) {
+	donePrintIDs := testDaemon(t, "ZnZ0eW81bWw1NjMzc2dlYjI5azVuNThleDVzYjZ1aG8=", "6502f105025832238e865526", NewQueue([]*Print{
 		{
 			ID:      "6502f46b17592a5a9e870928",
 			Header:  "Test Print 1",
@@ -44,8 +44,8 @@ func TestPrintLoop(t *testing.T) {
 	}, donePrintIDs)
 }
 
-func TestPrintLoopEmptyHeader(t *testing.T) {
-	donePrintIDs := testPrintLoop(t, "dGlsa2c0em5lOG4waTl3MTl1d2prejVldmk5cGIycTU=", "6502fee52e058f9990cc5c6e", NewQueue([]*Print{
+func TestDaemonEmptyHeader(t *testing.T) {
+	donePrintIDs := testDaemon(t, "dGlsa2c0em5lOG4waTl3MTl1d2prejVldmk5cGIycTU=", "6502fee52e058f9990cc5c6e", NewQueue([]*Print{
 		{
 			ID:      "6502fec79eed503a402e0b59",
 			Header:  "",
@@ -62,8 +62,8 @@ func TestPrintLoopEmptyHeader(t *testing.T) {
 	}, donePrintIDs)
 }
 
-func TestPrintLoopEmptyContent(t *testing.T) {
-	donePrintIDs := testPrintLoop(t, "bWJocHBqMXA1aHRxbHpmMWo2bnNvYmhmcmVpYXlvdGQ=", "6502fee1c7bb2bf7288be9c7", NewQueue([]*Print{
+func TestDaemonEmptyContent(t *testing.T) {
+	donePrintIDs := testDaemon(t, "bWJocHBqMXA1aHRxbHpmMWo2bnNvYmhmcmVpYXlvdGQ=", "6502fee1c7bb2bf7288be9c7", NewQueue([]*Print{
 		{
 			ID:      "6502fecc74093fd44c060e11",
 			Header:  "Keyboard Cat",
@@ -80,8 +80,8 @@ func TestPrintLoopEmptyContent(t *testing.T) {
 	}, donePrintIDs)
 }
 
-func TestPrintLoopBreak(t *testing.T) {
-	donePrintIDs := testPrintLoop(t, "em95bHBmMTduM25wcDJyeTVucGd1bDI3MXB1d2V6ODM=", "6502fedddafbfc6ac0f20876", NewQueue([]*Print{
+func TestDaemonBreak(t *testing.T) {
+	donePrintIDs := testDaemon(t, "em95bHBmMTduM25wcDJyeTVucGd1bDI3MXB1d2V6ODM=", "6502fedddafbfc6ac0f20876", NewQueue([]*Print{
 		{
 			ID:      "6502fed2ee36d5244aade158",
 			Header:  "Test Print 1",
@@ -108,9 +108,7 @@ func TestPrintLoopBreak(t *testing.T) {
 	}, donePrintIDs)
 }
 
-func testPrintLoop(t *testing.T, token, contestid string, queue *Queue) (donePrintIDs []string) {
-	delayNotFound = 500 * time.Millisecond
-
+func testDaemon(t *testing.T, token, contestid string, queue *Queue) (donePrintIDs []string) {
 	pog.InitDefault()
 
 	r := mux.NewRouter()
@@ -153,7 +151,13 @@ func testPrintLoop(t *testing.T, token, contestid string, queue *Queue) (donePri
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		printLoop(ctx, cfg, exitCh, abortCh, pog.NewPogger(io.Discard, "", 0))
+		Daemon{
+			cfg:           cfg,
+			exitCh:        exitCh,
+			abortCh:       abortCh,
+			pog:           pog.NewPogger(io.Discard, "", 0),
+			delayNotFound: 125 * time.Millisecond,
+		}.Loop(ctx)
 	}()
 
 	select {

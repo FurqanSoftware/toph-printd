@@ -15,7 +15,6 @@ import (
 	"time"
 
 	"github.com/FurqanSoftware/pog"
-	"github.com/avast/retry-go"
 	"github.com/fatih/color"
 )
 
@@ -27,8 +26,6 @@ var (
 
 	repoOwner = "FurqanSoftware"
 	repoName  = "toph-printd"
-
-	delayNotFound = 5 * time.Second
 )
 
 func main() {
@@ -89,7 +86,13 @@ func main() {
 	go func() {
 		defer wg.Done()
 		pog.Info("Waiting for prints")
-		printLoop(ctx, cfg, exitch, abortch, pog.Default())
+		Daemon{
+			cfg:           cfg,
+			exitCh:        exitch,
+			abortCh:       abortch,
+			pog:           pog.Default(),
+			delayNotFound: 5 * time.Second,
+		}.Loop(ctx)
 	}()
 
 	sigch := make(chan os.Signal, 2)
@@ -109,67 +112,6 @@ func main() {
 	wg.Wait()
 
 	pog.Info("Goodbye")
-}
-
-func printLoop(ctx context.Context, cfg Config, exitch chan struct{}, abortch chan error, pog *pog.Pogger) {
-	delay := 0 * time.Second
-L:
-	for {
-		pr, err := getNextPrint(ctx, cfg)
-		var terr tophError
-		if errors.As(err, &terr) {
-			pog.SetStatus(statusOffline)
-			pog.Error(err)
-			if !errors.As(err, &retryableError{}) {
-				abortch <- err
-				break L
-			}
-			delay = cfg.Printd.DelayError
-			goto retry
-		}
-		catch(err)
-
-		if pr.ID == "" {
-			pog.SetStatus(statusReady)
-			delay = delayNotFound
-			goto retry
-		}
-
-		pog.SetStatus(statusPrinting)
-
-		pog.Infof("Printing %s", pr.ID)
-		err = runPrintJob(ctx, cfg, pr)
-		catch(err)
-		err = retry.Do(func() error {
-			return markPrintDone(ctx, cfg, pr)
-		},
-			retry.RetryIf(func(err error) bool { return errors.As(err, &retryableError{}) }),
-			retry.Attempts(3),
-			retry.Delay(500*time.Millisecond),
-			retry.LastErrorOnly(true),
-		)
-		if errors.As(err, &terr) {
-			pog.SetStatus(statusOffline)
-			pog.Error(err)
-			if !errors.As(err, &retryableError{}) {
-				abortch <- err
-				break L
-			}
-			delay = cfg.Printd.DelayError
-			goto retry
-		}
-		catch(err)
-		pog.Info("∟ Done")
-
-		delay = cfg.Printd.DelayAfter
-
-	retry:
-		select {
-		case <-exitch:
-			break L
-		case <-time.After(delay):
-		}
-	}
 }
 
 func printBanner() {
