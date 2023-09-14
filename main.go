@@ -23,9 +23,7 @@ var (
 	flagConfig string
 
 	version = ""
-	commit  = ""
 	date    = ""
-	builtBy = ""
 
 	repoOwner = "FurqanSoftware"
 	repoName  = "toph-printd"
