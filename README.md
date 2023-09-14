@@ -83,7 +83,7 @@ pageSize = "A4" # Size of the page. Use one of "A4", "letter", or "legal".
 baseURL = "https://toph.co"
 token = "..."               # Collect your Printd token from Toph Support. The token is contest-specific.
 contestID = "..."           # The 24-character hex ID of the contest goes here.
-timeout = "10s"             # Timeout duration for HTTP client.
+timeout = "30s"             # Timeout duration for HTTP client.
 ```
 
 ## Frequently Asked Questions
