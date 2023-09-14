@@ -11,6 +11,7 @@ import (
 
 type Daemon struct {
 	cfg           Config
+	params        Parameters
 	exitCh        chan struct{}
 	abortCh       chan error
 	pog           *pog.Pogger

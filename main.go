@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -82,12 +83,23 @@ func main() {
 		pulseLoop(cfg, exitch)
 	}()
 
+	pog.Info("Connecting to Toph")
+	params, err := fetchParameters(ctx, cfg)
+	var terr tophError
+	if errors.As(err, &terr) {
+		pog.Fatal(err)
+	}
+	catch(err)
+
+	pog.Infof("∟ Contest: %s", ellipsize(params.ContestTitle, 35, "..."))
+
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		pog.Info("Waiting for prints")
 		Daemon{
 			cfg:           cfg,
+			params:        params,
 			exitCh:        exitch,
 			abortCh:       abortch,
 			pog:           pog.Default(),
@@ -148,4 +160,12 @@ func catch(err error) {
 			pog.Fatalln("Fatal error:", err)
 		}
 	}
+}
+
+func ellipsize(s string, n int, end string) string {
+	r := []rune(s)
+	if len(r) < n {
+		return s
+	}
+	return strings.TrimSpace(string(r[:n])) + end
 }
