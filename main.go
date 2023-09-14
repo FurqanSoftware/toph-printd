@@ -144,7 +144,7 @@ func printBanner() {
 	if version != "" {
 		fmt.Fprintf(log.Writer(), "» Release: %s", version)
 	} else {
-		fmt.Fprint(log.Writer(), "» Release: devel")
+		fmt.Fprint(log.Writer(), "» Release: -")
 	}
 	if date != "" {
 		fmt.Fprintf(log.Writer(), " (%s)", date)
