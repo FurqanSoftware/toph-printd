@@ -27,6 +27,8 @@ var (
 
 	repoOwner = "FurqanSoftware"
 	repoName  = "toph-printd"
+
+	delayNotFound = 5 * time.Second
 )
 
 func main() {
@@ -87,7 +89,7 @@ func main() {
 	go func() {
 		defer wg.Done()
 		pog.Info("Waiting for prints")
-		printLoop(ctx, cfg, exitch, abortch)
+		printLoop(ctx, cfg, exitch, abortch, pog.Default())
 	}()
 
 	sigch := make(chan os.Signal, 2)
@@ -109,7 +111,7 @@ func main() {
 	pog.Info("Goodbye")
 }
 
-func printLoop(ctx context.Context, cfg Config, exitch chan struct{}, abortch chan error) {
+func printLoop(ctx context.Context, cfg Config, exitch chan struct{}, abortch chan error, pog *pog.Pogger) {
 	delay := 0 * time.Second
 L:
 	for {
@@ -129,7 +131,7 @@ L:
 
 		if pr.ID == "" {
 			pog.SetStatus(statusReady)
-			delay = 5 * time.Second
+			delay = delayNotFound
 			goto retry
 		}
 

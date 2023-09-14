@@ -4,11 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"sync"
 	"testing"
+	"time"
 
 	"github.com/FurqanSoftware/pog"
 	"github.com/gorilla/mux"
@@ -107,6 +109,8 @@ func TestPrintLoopBreak(t *testing.T) {
 }
 
 func testPrintLoop(t *testing.T, token, contestid string, queue *Queue) (donePrintIDs []string) {
+	delayNotFound = 500 * time.Millisecond
+
 	pog.InitDefault()
 
 	r := mux.NewRouter()
@@ -149,7 +153,7 @@ func testPrintLoop(t *testing.T, token, contestid string, queue *Queue) (donePri
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		printLoop(ctx, cfg, exitCh, abortCh)
+		printLoop(ctx, cfg, exitCh, abortCh, pog.NewPogger(io.Discard, "", 0))
 	}()
 
 	select {
