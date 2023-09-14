@@ -2,10 +2,9 @@ package main
 
 import (
 	"context"
-	"log"
 	"time"
 
-	"github.com/fatih/color"
+	"github.com/FurqanSoftware/pog"
 	"github.com/google/go-github/v53/github"
 	"golang.org/x/mod/semver"
 )
@@ -34,7 +33,7 @@ func checkUpdate(ctx context.Context) error {
 	}
 
 	if semver.Compare(*rel.TagName, version) > 0 {
-		log.Printf("%s Update available (%s)", color.HiYellowString("[W]"), *rel.TagName)
+		pog.Warnf("Update available (%s)", *rel.TagName)
 	}
 
 	return nil

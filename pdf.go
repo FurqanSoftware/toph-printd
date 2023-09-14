@@ -3,10 +3,9 @@ package main
 import (
 	_ "embed"
 	"fmt"
-	"log"
 	"strings"
 
-	"github.com/fatih/color"
+	"github.com/FurqanSoftware/pog"
 	"github.com/signintech/gopdf"
 )
 
@@ -25,7 +24,7 @@ func (b PDFBuilder) Build(name string, pr Print) error {
 	pdf.AddPage()
 	err := pdf.AddTTFFontData("Ubuntu Mono", ubuntuMonoR)
 	if err != nil {
-		log.Fatalln(color.RedString("[E]"), err.Error())
+		pog.Fatal(err)
 		return nil
 	}
 	err = pdf.SetFont("Ubuntu Mono", "", b.cfg.Printd.FontSize)

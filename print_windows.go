@@ -1,11 +1,10 @@
 package main
 
 import (
-	"log"
 	"os/exec"
 	"strconv"
 
-	"github.com/fatih/color"
+	"github.com/FurqanSoftware/pog"
 )
 
 func printPDF(cfg Config, name string) error {
@@ -21,7 +20,7 @@ func printPDF(cfg Config, name string) error {
 func checkDependencies() {
 	_, err := exec.LookPath(`.\PDFtoPrinter.exe`)
 	if err != nil {
-		log.Fatalln(color.RedString("[E]"), "Missing dependency: could not find PDFtoPrinter.exe")
+		pog.Fatal("Missing dependency: could not find PDFtoPrinter.exe")
 	}
 }
 

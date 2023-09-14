@@ -1,12 +1,11 @@
 package main
 
 import (
-	"log"
 	"os"
 	"time"
 
 	"github.com/BurntSushi/toml"
-	"github.com/fatih/color"
+	"github.com/FurqanSoftware/pog"
 )
 
 type Config struct {
@@ -92,13 +91,13 @@ func parseConfig() (cfg Config, err error) {
 
 func validateConfig(cfg Config) {
 	if cfg.Toph.BaseURL == "" {
-		log.Fatalln(color.RedString("[E]"), "Incomplete configuration: missing Toph base URL")
+		pog.Error("Incomplete configuration: missing Toph base URL")
 	}
 	if cfg.Toph.Token == "" {
-		log.Fatalln(color.RedString("[E]"), "Incomplete configuration: missing token")
+		pog.Error("Incomplete configuration: missing token")
 	}
 	if cfg.Toph.ContestID == "" {
-		log.Fatalln(color.RedString("[E]"), "Incomplete configuration: missing contest ID")
+		pog.Error("Incomplete configuration: missing contest ID")
 	}
 }
 

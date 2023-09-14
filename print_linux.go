@@ -3,10 +3,9 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"log"
 	"os/exec"
 
-	"github.com/fatih/color"
+	"github.com/FurqanSoftware/pog"
 )
 
 func printPDF(cfg Config, name string) error {
@@ -22,7 +21,7 @@ func printPDF(cfg Config, name string) error {
 func checkDependencies() {
 	_, err := exec.LookPath("lpr")
 	if err != nil {
-		log.Fatalln(color.RedString("[E]"), "Missing dependency: could not find lpr")
+		pog.Fatal("Missing dependency: could not find lpr")
 	}
 }
 

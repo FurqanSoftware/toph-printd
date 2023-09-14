@@ -14,6 +14,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/FurqanSoftware/pog"
 	"github.com/avast/retry-go"
 	"github.com/fatih/color"
 )
@@ -33,6 +34,8 @@ var (
 func main() {
 	log.SetPrefix("\033[2K\r")
 	log.SetFlags(log.Ldate | log.Ltime)
+
+	pog.InitDefault()
 
 	fmt.Fprintln(log.Writer(), `  ____       _       _      _ 
  |  _ \ _ __(_)_ __ | |_ __| |
@@ -62,27 +65,27 @@ func main() {
 
 	ctx := context.Background()
 
-	log.Println("[i]", "Loading configuration")
+	pog.Info("Loading configuration")
 	cfg, err := parseConfig()
 	switch {
 	case errors.Is(err, fs.ErrNotExist):
-		log.Fatalln(color.RedString("[E]"), fmt.Sprintf("Configuration file %s does not exist", flagConfig))
+		pog.Fatalf("Configuration file %s does not exist", flagConfig)
 	case err != nil:
-		log.Fatalln(color.RedString("[E]"), fmt.Sprintf("Could not parse configuration file"))
+		pog.Fatal("Could not parse configuration file")
 	}
 	catch(err)
 	validateConfig(cfg)
 
 	if cfg.Printer.Name == "" {
-		log.Println("[i]", fmt.Sprintf("∟ Printer: ‹System Default›"))
+		pog.Info("∟ Printer: ‹System Default›")
 	} else {
-		log.Println("[i]", fmt.Sprintf("∟ Printer: %s", cfg.Printer.Name))
+		pog.Infof("∟ Printer: %s", cfg.Printer.Name)
 	}
-	log.Println("[i]", fmt.Sprintf("∟ Page Size: %s", cfg.Printer.PageSize))
+	pog.Infof("∟ Page Size: %s", cfg.Printer.PageSize)
 
 	err = checkUpdate(ctx)
 	if err != nil {
-		log.Println(color.HiYellowString("[W]"), "Could not check for updates")
+		pog.Warn("Could not check for updates")
 	}
 
 	color.NoColor = !cfg.Printd.LogColor
@@ -91,9 +94,9 @@ func main() {
 	err = checkPrinter(cfg)
 	if errors.Is(err, errPrinterNotExist) {
 		if cfg.Printer.Name != "" {
-			log.Fatalln(color.RedString("[E]"), fmt.Sprintf("Printer %s does not exist", cfg.Printer.Name))
+			pog.Fatalf("Printer %s does not exist", cfg.Printer.Name)
 		} else {
-			log.Fatalln(color.RedString("[E]"), "No printer exists")
+			pog.Fatal("No printer exists")
 		}
 	}
 
@@ -109,23 +112,18 @@ func main() {
 		pulseLoop(cfg, exitch)
 	}()
 
-	throbber := Throbber{}
-	if cfg.Printd.Throbber {
-		go throbber.Loop(cfg, exitch)
-	}
-
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		log.Println("[i]", "Waiting for prints")
+		pog.Info("Waiting for prints")
 		delay := 0 * time.Second
 	L:
 		for {
 			pr, err := getNextPrint(ctx, cfg)
 			var terr tophError
 			if errors.As(err, &terr) {
-				throbber.SetState(ThrobberOffline)
-				log.Println(color.RedString("[E]"), err)
+				pog.SetStatus(statusOffline)
+				pog.Error(err)
 				if !errors.As(err, &retryableError{}) {
 					close(abortch)
 					break L
@@ -136,14 +134,14 @@ func main() {
 			catch(err)
 
 			if pr.ID == "" {
-				throbber.SetState(ThrobberReady)
+				pog.SetStatus(statusReady)
 				delay = 5 * time.Second
 				goto retry
 			}
 
-			throbber.SetState(ThrobberPrinting)
+			pog.SetStatus(statusPrinting)
 
-			log.Printf("[i]"+" Printing %s", pr.ID)
+			pog.Infof("Printing %s", pr.ID)
 			err = runPrintJob(ctx, cfg, pr)
 			catch(err)
 			err = retry.Do(func() error {
@@ -155,8 +153,8 @@ func main() {
 				retry.LastErrorOnly(true),
 			)
 			if errors.As(err, &terr) {
-				throbber.SetState(ThrobberOffline)
-				log.Println(color.RedString("[E]"), err)
+				pog.SetStatus(statusOffline)
+				pog.Error(err)
 				if !errors.As(err, &retryableError{}) {
 					close(abortch)
 					break L
@@ -165,7 +163,7 @@ func main() {
 				goto retry
 			}
 			catch(err)
-			log.Println("[i]", ".. Done")
+			pog.Info("∟ Done")
 
 			delay = cfg.Printd.DelayAfter
 
@@ -183,15 +181,16 @@ func main() {
 
 	select {
 	case sig := <-sigch:
-		log.Printf("[i]"+" Received %s", sig)
+		pog.Infof("Received %s", sig)
 	case <-abortch:
 	}
 
-	log.Println("[i]", "Exiting")
+	pog.Info("Exiting")
+	pog.Stop()
 	close(exitch)
 	wg.Wait()
 
-	log.Println("[i]", "Goodbye")
+	pog.Info("Goodbye")
 }
 
 func catch(err error) {
@@ -199,7 +198,7 @@ func catch(err error) {
 		if version == "devel" {
 			panic(err)
 		} else {
-			log.Fatalln(color.RedString("[E]"), "Fatal error:", err)
+			pog.Fatalln("Fatal error:", err)
 		}
 	}
 }
