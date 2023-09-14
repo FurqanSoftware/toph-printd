@@ -101,6 +101,15 @@ func validateConfig(cfg Config) {
 	}
 }
 
+func logConfigSummary(cfg Config) {
+	if cfg.Printer.Name == "" {
+		pog.Info("∟ Printer: ‹System Default›")
+	} else {
+		pog.Infof("∟ Printer: %s", cfg.Printer.Name)
+	}
+	pog.Infof("∟ Page Size: %s", cfg.Printer.PageSize)
+}
+
 type PageSize string
 
 const (
