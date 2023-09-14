@@ -35,7 +35,9 @@ func getNextPrint(ctx context.Context, cfg Config) (pr Print, err error) {
 	defer resp.Body.Close()
 	switch resp.StatusCode {
 	case http.StatusNotFound:
-		return Print{}, nil
+		return Print{}, noNextPrintError{
+			contestLocked: resp.Header.Get("Toph-Contest-Locked") == "1",
+		}
 	case http.StatusForbidden:
 		return Print{}, tophError{"Could not retrieve print", errInvalidToken}
 	}

@@ -26,6 +26,14 @@ func (e retryableError) Unwrap() error {
 	return e.error
 }
 
+type noNextPrintError struct {
+	contestLocked bool
+}
+
+func (e noNextPrintError) Error() string {
+	return "no next print available"
+}
+
 var (
 	errInvalidToken    = errors.New("invalid token")
 	errPrinterNotExist = errors.New("printer does not exist")

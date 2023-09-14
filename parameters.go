@@ -10,7 +10,8 @@ import (
 )
 
 type Parameters struct {
-	ContestTitle string
+	ContestTitle  string
+	ContestLocked bool
 }
 
 func fetchParameters(ctx context.Context, cfg Config) (params Parameters, err error) {

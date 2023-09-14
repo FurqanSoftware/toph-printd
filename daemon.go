@@ -19,62 +19,69 @@ type Daemon struct {
 }
 
 func (d Daemon) Loop(ctx context.Context) {
-	delay := 0 * time.Second
 L:
 	for {
-		pr, err := getNextPrint(ctx, d.cfg)
-		var terr tophError
-		if errors.As(err, &terr) {
-			d.pog.SetStatus(statusOffline)
-			d.pog.Error(err)
-			if !errors.As(err, &retryableError{}) {
-				d.abortCh <- err
-				break L
-			}
-			delay = d.cfg.Printd.DelayError
-			goto retry
-		}
-		catch(err)
-
-		if pr.ID == "" {
-			d.pog.SetStatus(statusReady)
-			delay = d.delayNotFound
-			goto retry
+		stop, delay := d.iter(ctx)
+		if stop {
+			break
 		}
 
-		d.pog.SetStatus(statusPrinting)
-
-		d.pog.Infof("Printing %s", pr.ID)
-		err = runPrintJob(ctx, d.cfg, pr)
-		catch(err)
-		err = retry.Do(func() error {
-			return markPrintDone(ctx, d.cfg, pr)
-		},
-			retry.RetryIf(func(err error) bool { return errors.As(err, &retryableError{}) }),
-			retry.Attempts(3),
-			retry.Delay(500*time.Millisecond),
-			retry.LastErrorOnly(true),
-		)
-		if errors.As(err, &terr) {
-			d.pog.SetStatus(statusOffline)
-			d.pog.Error(err)
-			if !errors.As(err, &retryableError{}) {
-				d.abortCh <- err
-				break L
-			}
-			delay = d.cfg.Printd.DelayError
-			goto retry
-		}
-		catch(err)
-		d.pog.Info("∟ Done")
-
-		delay = d.cfg.Printd.DelayAfter
-
-	retry:
 		select {
 		case <-d.exitCh:
 			break L
 		case <-time.After(delay):
 		}
 	}
+}
+
+func (d Daemon) iter(ctx context.Context) (stop bool, delay time.Duration) {
+	pr, err := getNextPrint(ctx, d.cfg)
+	var terr tophError
+	if errors.As(err, &terr) {
+		d.pog.SetStatus(statusOffline)
+		d.pog.Error(err)
+		if !errors.As(err, &retryableError{}) {
+			d.abortCh <- err
+			return true, 0
+		}
+		return false, d.cfg.Printd.DelayError
+	}
+	var perr noNextPrintError
+	if errors.As(err, &perr) {
+		if perr.contestLocked {
+			pog.Info("Contest is locked")
+			d.abortCh <- err
+			return true, 0
+		}
+		d.pog.SetStatus(statusReady)
+		return false, d.delayNotFound
+	}
+	catch(err)
+
+	d.pog.SetStatus(statusPrinting)
+
+	d.pog.Infof("Printing %s", pr.ID)
+	err = runPrintJob(ctx, d.cfg, pr)
+	catch(err)
+	err = retry.Do(func() error {
+		return markPrintDone(ctx, d.cfg, pr)
+	},
+		retry.RetryIf(func(err error) bool { return errors.As(err, &retryableError{}) }),
+		retry.Attempts(3),
+		retry.Delay(500*time.Millisecond),
+		retry.LastErrorOnly(true),
+	)
+	if errors.As(err, &terr) {
+		d.pog.SetStatus(statusOffline)
+		d.pog.Error(err)
+		if !errors.As(err, &retryableError{}) {
+			d.abortCh <- err
+			return true, 0
+		}
+		return false, d.cfg.Printd.DelayError
+	}
+	catch(err)
+	d.pog.Info("∟ Done")
+
+	return false, d.cfg.Printd.DelayAfter
 }

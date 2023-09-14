@@ -76,6 +76,7 @@ func main() {
 	wg := sync.WaitGroup{}
 	exitch := make(chan struct{})
 	abortch := make(chan error, 1)
+	sigch := make(chan os.Signal, 2)
 
 	wg.Add(1)
 	go func() {
@@ -93,24 +94,28 @@ func main() {
 
 	pog.Infof("∟ Contest: %s", ellipsize(params.ContestTitle, 35, "..."))
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		pog.Info("Waiting for prints")
-		Daemon{
-			cfg:           cfg,
-			params:        params,
-			exitCh:        exitch,
-			abortCh:       abortch,
-			pog:           pog.Default(),
-			delayNotFound: 5 * time.Second,
-		}.Loop(ctx)
-	}()
+	if params.ContestLocked {
+		pog.Info("Contest is locked")
+		close(abortch)
 
-	sigch := make(chan os.Signal, 2)
-	signal.Notify(sigch, os.Interrupt, syscall.SIGTERM)
+	} else {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			pog.Info("Waiting for prints")
+			Daemon{
+				cfg:           cfg,
+				params:        params,
+				exitCh:        exitch,
+				abortCh:       abortch,
+				pog:           pog.Default(),
+				delayNotFound: 5 * time.Second,
+			}.Loop(ctx)
+		}()
 
-	pog.Info("Press Ctrl+C to exit")
+		signal.Notify(sigch, os.Interrupt, syscall.SIGTERM)
+		pog.Info("Press Ctrl+C to exit")
+	}
 
 	select {
 	case sig := <-sigch:
