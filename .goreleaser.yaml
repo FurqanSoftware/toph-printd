@@ -9,7 +9,10 @@ builds:
       - linux
       - windows
 archives:
-  - files:
+  - format_overrides:
+      - goos: windows
+        format: zip
+    files:
       - LICENSE.txt
       - README.md
       - UBUNTU_FONT_LICENCE.txt
