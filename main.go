@@ -178,6 +178,10 @@ func main() {
 
 func catch(err error) {
 	if err != nil {
-		panic(err)
+		if version == "devel" {
+			panic(err)
+		} else {
+			log.Fatalln(color.RedString("[E]"), "Fatal error:", err)
+		}
 	}
 }
