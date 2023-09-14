@@ -42,6 +42,9 @@ func main() {
 	fmt.Fprintln(log.Writer(), "For Toph, By Furqan Software (https://furqansoftware.com)")
 	fmt.Fprintln(log.Writer())
 
+	if version == "" {
+		version = "devel"
+	}
 	fmt.Fprintf(log.Writer(), "» Release: %s", version)
 	if date != "" {
 		fmt.Fprintf(log.Writer(), " (%s)", date)

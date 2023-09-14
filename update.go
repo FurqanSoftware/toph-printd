@@ -11,6 +11,10 @@ import (
 )
 
 func checkUpdate(ctx context.Context) error {
+	if version == "" || version == "devel" {
+		return nil
+	}
+
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
