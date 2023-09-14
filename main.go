@@ -111,32 +111,6 @@ func main() {
 	pog.Info("Goodbye")
 }
 
-func printBanner() {
-	fmt.Fprintln(log.Writer(), `  ____       _       _      _ 
- |  _ \ _ __(_)_ __ | |_ __| |
-`+" | |_) | '__| | '_ \\| __/ _` |"+`
- |  __/| |  | | | | | || (_| |
- |_|   |_|  |_|_| |_|\__\__,_|`)
-	fmt.Fprintln(log.Writer())
-	fmt.Fprintln(log.Writer(), "For Toph, By Furqan Software (https://furqansoftware.com)")
-	fmt.Fprintln(log.Writer())
-
-	if version != "" {
-		fmt.Fprintf(log.Writer(), "» Release: %s", version)
-	} else {
-		fmt.Fprint(log.Writer(), "» Release: devel")
-	}
-	if date != "" {
-		fmt.Fprintf(log.Writer(), " (%s)", date)
-	}
-	fmt.Fprintln(log.Writer())
-	fmt.Fprintln(log.Writer())
-
-	fmt.Fprintf(log.Writer(), "» Project: https://github.com/%s/%s\n", repoOwner, repoName)
-	fmt.Fprintln(log.Writer(), "» Support: https://community.toph.co/c/support/printd/57")
-	fmt.Fprintln(log.Writer())
-}
-
 func printLoop(ctx context.Context, cfg Config, exitch chan struct{}, abortch chan error) {
 	delay := 0 * time.Second
 L:
@@ -196,6 +170,32 @@ L:
 		case <-time.After(delay):
 		}
 	}
+}
+
+func printBanner() {
+	fmt.Fprintln(log.Writer(), `  ____       _       _      _ 
+ |  _ \ _ __(_)_ __ | |_ __| |
+`+" | |_) | '__| | '_ \\| __/ _` |"+`
+ |  __/| |  | | | | | || (_| |
+ |_|   |_|  |_|_| |_|\__\__,_|`)
+	fmt.Fprintln(log.Writer())
+	fmt.Fprintln(log.Writer(), "For Toph, By Furqan Software (https://furqansoftware.com)")
+	fmt.Fprintln(log.Writer())
+
+	if version != "" {
+		fmt.Fprintf(log.Writer(), "» Release: %s", version)
+	} else {
+		fmt.Fprint(log.Writer(), "» Release: devel")
+	}
+	if date != "" {
+		fmt.Fprintf(log.Writer(), " (%s)", date)
+	}
+	fmt.Fprintln(log.Writer())
+	fmt.Fprintln(log.Writer())
+
+	fmt.Fprintf(log.Writer(), "» Project: https://github.com/%s/%s\n", repoOwner, repoName)
+	fmt.Fprintln(log.Writer(), "» Support: https://community.toph.co/c/support/printd/57")
+	fmt.Fprintln(log.Writer())
 }
 
 func catch(err error) {
