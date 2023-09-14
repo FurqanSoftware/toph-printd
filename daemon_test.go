@@ -108,6 +108,12 @@ func TestDaemonBreak(t *testing.T) {
 	}, donePrintIDs)
 }
 
+func TestDaemonEmpty(t *testing.T) {
+	donePrintIDs := testDaemon(t, "ZWV5aTFwc3hjNnc2c2NlZG13MHpreHUzaDc3cXhyMmg=", "6503070f91fb17000cc2e5b9", NewQueue([]*Print{}))
+
+	assert.Equal(t, []string{}, donePrintIDs)
+}
+
 func testDaemon(t *testing.T, token, contestid string, queue *Queue) (donePrintIDs []string) {
 	pog.InitDefault()
 
@@ -183,13 +189,20 @@ type Queue struct {
 }
 
 func NewQueue(prints []*Print) *Queue {
-	return &Queue{
+	q := &Queue{
 		Prints:  prints,
 		EmptyCh: make(chan struct{}),
 	}
+	if len(q.Prints) == 0 {
+		close(q.EmptyCh)
+	}
+	return q
 }
 
 func (q *Queue) Next() *Print {
+	if len(q.Prints) == 0 {
+		return nil
+	}
 	pr := q.Prints[0]
 	q.Prints = q.Prints[1:]
 	if len(q.Prints) == 0 {
