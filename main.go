@@ -95,6 +95,8 @@ func main() {
 	sigch := make(chan os.Signal, 2)
 	signal.Notify(sigch, os.Interrupt, syscall.SIGTERM)
 
+	pog.Info("Press Ctrl+C to exit")
+
 	select {
 	case sig := <-sigch:
 		pog.Infof("Received %s", sig)
