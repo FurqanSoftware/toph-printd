@@ -46,10 +46,11 @@ func main() {
 	fmt.Fprintln(log.Writer(), "For Toph, By Furqan Software (https://furqansoftware.com)")
 	fmt.Fprintln(log.Writer())
 
-	if version == "" {
-		version = "devel"
+	if version != "" {
+		fmt.Fprintf(log.Writer(), "» Release: %s", version)
+	} else {
+		fmt.Fprint(log.Writer(), "» Release: devel")
 	}
-	fmt.Fprintf(log.Writer(), "» Release: %s", version)
 	if date != "" {
 		fmt.Fprintf(log.Writer(), " (%s)", date)
 	}
@@ -195,7 +196,7 @@ func main() {
 
 func catch(err error) {
 	if err != nil {
-		if version == "devel" {
+		if version == "" {
 			panic(err)
 		} else {
 			pog.Fatalln("Fatal error:", err)

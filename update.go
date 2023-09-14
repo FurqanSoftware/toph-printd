@@ -10,7 +10,7 @@ import (
 )
 
 func checkUpdate(ctx context.Context) error {
-	if version == "" || version == "devel" {
+	if version == "" {
 		return nil
 	}
 
