@@ -18,6 +18,14 @@ func (e tophError) Unwrap() error {
 	return e.err
 }
 
+type retryableError struct {
+	error
+}
+
+func (e retryableError) Unwrap() error {
+	return e.error
+}
+
 var (
 	errInvalidToken    = errors.New("invalid token")
 	errPrinterNotExist = errors.New("printer does not exist")

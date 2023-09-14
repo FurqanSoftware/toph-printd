@@ -72,6 +72,13 @@ func main() {
 	catch(err)
 	validateConfig(cfg)
 
+	if cfg.Printer.Name == "" {
+		log.Println("[i]", fmt.Sprintf("∟ Printer: ‹System Default›"))
+	} else {
+		log.Println("[i]", fmt.Sprintf("∟ Printer: %s", cfg.Printer.Name))
+	}
+	log.Println("[i]", fmt.Sprintf("∟ Page Size: %s", cfg.Printer.PageSize))
+
 	err = checkUpdate(ctx)
 	if err != nil {
 		log.Println(color.HiYellowString("[W]"), "Could not check for updates")
@@ -117,6 +124,9 @@ func main() {
 			if errors.As(err, &terr) {
 				throbber.SetState(ThrobberOffline)
 				log.Println(color.RedString("[E]"), err)
+				if !errors.As(err, &retryableError{}) {
+					break L
+				}
 				delay = cfg.Printd.DelayError
 				goto retry
 			}

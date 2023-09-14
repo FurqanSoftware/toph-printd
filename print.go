@@ -30,7 +30,7 @@ func getNextPrint(ctx context.Context, cfg Config) (pr Print, err error) {
 	req.Header.Add("Authorization", "Printd "+cfg.Toph.Token)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return Print{}, tophError{"Could not reach Toph", err}
+		return Print{}, retryableError{tophError{"Could not reach Toph", err}}
 	}
 	defer resp.Body.Close()
 	switch resp.StatusCode {
@@ -43,12 +43,12 @@ func getNextPrint(ctx context.Context, cfg Config) (pr Print, err error) {
 	b.Reset()
 	_, err = io.Copy(&b, resp.Body)
 	if err != nil {
-		return Print{}, tophError{"Could not retrieve print", err}
+		return Print{}, retryableError{tophError{"Could not retrieve print", err}}
 	}
 
 	err = json.NewDecoder(&b).Decode(&pr)
 	if err != nil {
-		return Print{}, tophError{"Could not parse response", err}
+		return Print{}, retryableError{tophError{"Could not parse response", err}}
 	}
 	return pr, nil
 }
