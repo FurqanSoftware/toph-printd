@@ -100,6 +100,7 @@ func main() {
 
 	wg := sync.WaitGroup{}
 	exitch := make(chan struct{})
+	abortch := make(chan struct{})
 
 	wg.Add(1)
 	go func() {
@@ -125,6 +126,7 @@ func main() {
 				throbber.SetState(ThrobberOffline)
 				log.Println(color.RedString("[E]"), err)
 				if !errors.As(err, &retryableError{}) {
+					close(abortch)
 					break L
 				}
 				delay = cfg.Printd.DelayError
@@ -161,8 +163,11 @@ func main() {
 	sigch := make(chan os.Signal, 2)
 	signal.Notify(sigch, os.Interrupt, syscall.SIGTERM)
 
-	sig := <-sigch
-	log.Printf("[i]"+" Received %s", sig)
+	select {
+	case sig := <-sigch:
+		log.Printf("[i]"+" Received %s", sig)
+	case <-abortch:
+	}
 
 	log.Println("[i]", "Exiting")
 	close(exitch)
