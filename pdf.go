@@ -14,7 +14,12 @@ type PDFBuilder struct {
 	cfg Config
 }
 
-func (b PDFBuilder) Build(name string, pr Print) error {
+type PDF struct {
+	Name      string
+	PageCount int
+}
+
+func (b PDFBuilder) Build(name string, pr Print) (PDF, error) {
 	pdf := gopdf.GoPdf{}
 
 	pagesize := gopdfPageSizes[b.cfg.Printer.PageSize]
@@ -26,11 +31,11 @@ func (b PDFBuilder) Build(name string, pr Print) error {
 	err := pdf.AddTTFFontData("Ubuntu Mono", ubuntuMonoR)
 	if err != nil {
 		pog.Fatal(err)
-		return nil
+		return PDF{}, nil
 	}
 	err = pdf.SetFont("Ubuntu Mono", "", b.cfg.Printd.FontSize)
 	if err != nil {
-		return err
+		return PDF{}, err
 	}
 
 	linesperpage := int((pagesize.H - (b.cfg.Printd.MarginTop + b.cfg.Printd.MarginBottom)) / b.cfg.Printd.LineHeight)
@@ -45,7 +50,7 @@ func (b PDFBuilder) Build(name string, pr Print) error {
 	if header != "" {
 		headerlines, err = pdf.SplitText(header, pagesize.W-pdf.MarginLeft()-pdf.MarginRight())
 		if err != nil {
-			return err
+			return PDF{}, err
 		}
 	}
 
@@ -56,7 +61,7 @@ func (b PDFBuilder) Build(name string, pr Print) error {
 	if content != "" {
 		lines, err = pdf.SplitText(content, pagesize.W-pdf.MarginLeft()-pdf.MarginRight())
 		if err != nil {
-			return err
+			return PDF{}, err
 		}
 	}
 
@@ -79,11 +84,19 @@ func (b PDFBuilder) Build(name string, pr Print) error {
 		}
 		err = pdf.Cell(nil, l)
 		if err != nil {
-			return err
+			return PDF{}, err
 		}
 	}
 
-	return pdf.WritePdf(name)
+	err = pdf.WritePdf(name)
+	if err != nil {
+		return PDF{}, err
+	}
+
+	return PDF{
+		Name:      name,
+		PageCount: npages,
+	}, err
 }
 
 func (b PDFBuilder) header(pdf *gopdf.GoPdf, lines []string, first bool, pageno, npages int) error {

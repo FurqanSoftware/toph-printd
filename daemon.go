@@ -61,10 +61,10 @@ func (d Daemon) iter(ctx context.Context) (stop bool, delay time.Duration) {
 	d.pog.SetStatus(statusPrinting)
 
 	d.pog.Infof("Printing %s", pr.ID)
-	err = runPrintJob(ctx, d.cfg, pr)
+	pdf, err := runPrintJob(ctx, d.cfg, pr)
 	catch(err)
 	err = retry.Do(func() error {
-		return markPrintDone(ctx, d.cfg, pr)
+		return markPrintDone(ctx, d.cfg, pr, pdf)
 	},
 		retry.RetryIf(func(err error) bool { return errors.As(err, &retryableError{}) }),
 		retry.Attempts(3),

@@ -55,32 +55,43 @@ func getNextPrint(ctx context.Context, cfg Config) (pr Print, err error) {
 	return pr, nil
 }
 
-func runPrintJob(ctx context.Context, cfg Config, pr Print) error {
+func runPrintJob(ctx context.Context, cfg Config, pr Print) (PDF, error) {
 	name := pr.ID + ".pdf"
-	err := PDFBuilder{
+	pdf, err := PDFBuilder{
 		cfg: cfg,
 	}.Build(name, pr)
 	if err != nil {
-		return err
+		return PDF{}, err
 	}
 
 	err = printPDF(cfg, name)
 	if err != nil {
-		return err
+		return PDF{}, err
 	}
 
 	if !cfg.Printd.KeepPDF {
 		err = os.Remove(name)
 		if err != nil {
-			return err
+			return PDF{}, err
 		}
 	}
 
-	return nil
+	return pdf, nil
 }
 
-func markPrintDone(ctx context.Context, cfg Config, pr Print) error {
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/printd/prints/%s/mark_done?contest=%s", cfg.Toph.BaseURL, pr.ID, cfg.Toph.ContestID), nil)
+type Done struct {
+	PageCount int `json:"pageCount"`
+}
+
+func markPrintDone(ctx context.Context, cfg Config, pr Print, pdf PDF) error {
+	body := Done{
+		PageCount: pdf.PageCount,
+	}
+	b, err := json.Marshal(body)
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/printd/prints/%s/mark_done?contest=%s", cfg.Toph.BaseURL, pr.ID, cfg.Toph.ContestID), bytes.NewReader(b))
 	req.Header.Add("Authorization", "Printd "+cfg.Toph.Token)
 	if err != nil {
 		return err
