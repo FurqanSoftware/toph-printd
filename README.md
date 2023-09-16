@@ -76,7 +76,7 @@ logColor = true          # Colors certain parts of the logs.
 throbber = true          # Shows an activity throbber below logs.
 
 [printer]
-name = "..."    # Name of the printer. Leave empty to use the system default.
+name = ""       # Name of the printer. Leave empty to use the system default.
 pageSize = "A4" # Size of the page. Use one of "A4", "letter", or "legal".
 
 [toph]
