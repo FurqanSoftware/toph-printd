@@ -257,8 +257,6 @@ type Frame struct {
 	contestLocked bool
 }
 
-var zeroFrame = Frame{}
-
 func NewQueue(frames []Frame) *Queue {
 	q := &Queue{
 		frames:  frames,
