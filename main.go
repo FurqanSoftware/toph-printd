@@ -60,7 +60,9 @@ func main() {
 		pog.Warn("Could not check for updates")
 	}
 
-	color.NoColor = !cfg.Printd.LogColor
+	if !color.NoColor {
+		color.NoColor = !cfg.Printd.LogColor
+	}
 
 	checkDependencies()
 	err = checkPrinter(cfg)
