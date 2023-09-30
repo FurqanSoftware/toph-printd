@@ -39,7 +39,7 @@ func (p *Pogger) SetStatus(status Status) {
 }
 
 func (p *Pogger) Debug(v ...any) {
-	a := []any{color.WhiteString("[d] ")}
+	a := []any{color.WhiteString("[d]") + " "}
 	a = append(a, v...)
 	p.logger.Print(a...)
 }
@@ -51,7 +51,7 @@ func (p *Pogger) Debugln(v ...any) {
 }
 
 func (p *Pogger) Debugf(format string, v ...any) {
-	p.logger.Printf(color.WhiteString("[d] ")+format, v...)
+	p.logger.Printf(color.WhiteString("[d]")+" "+format, v...)
 }
 
 func (p *Pogger) Info(v ...any) {
@@ -71,7 +71,7 @@ func (p *Pogger) Infof(format string, v ...any) {
 }
 
 func (p *Pogger) Warn(v ...any) {
-	a := []any{color.YellowString("[w] ")}
+	a := []any{color.YellowString("[w]") + " "}
 	a = append(a, v...)
 	p.logger.Print(a...)
 }
@@ -83,11 +83,11 @@ func (p *Pogger) Warnln(v ...any) {
 }
 
 func (p *Pogger) Warnf(format string, v ...any) {
-	p.logger.Printf(color.YellowString("[w] ")+format, v...)
+	p.logger.Printf(color.YellowString("[w]")+" "+format, v...)
 }
 
 func (p *Pogger) Error(v ...any) {
-	a := []any{color.RedString("[E] ")}
+	a := []any{color.RedString("[E]") + " "}
 	a = append(a, v...)
 	p.logger.Print(a...)
 }
@@ -99,7 +99,7 @@ func (p *Pogger) Errorln(v ...any) {
 }
 
 func (p *Pogger) Errorf(format string, v ...any) {
-	p.logger.Printf(color.RedString("[E] ")+format, v...)
+	p.logger.Printf(color.RedString("[E]")+" "+format, v...)
 }
 
 func (p *Pogger) Fatal(v ...any) {
