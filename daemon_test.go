@@ -225,9 +225,7 @@ func testDaemon(t *testing.T, token, contestid string, queue *Queue) (doneids []
 		}.Loop(ctx)
 	}()
 
-	select {
-	case <-queue.emptyCh:
-	}
+	<-queue.emptyCh
 
 	close(exitch)
 
