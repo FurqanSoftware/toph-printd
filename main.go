@@ -34,6 +34,7 @@ func main() {
 	log.SetFlags(log.Ldate | log.Ltime)
 
 	pog.InitDefault()
+	initPogHooks()
 
 	printBanner()
 

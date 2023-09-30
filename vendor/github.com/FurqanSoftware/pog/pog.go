@@ -13,12 +13,13 @@ import (
 )
 
 type Pogger struct {
-	out      io.Writer
-	logger   *log.Logger
-	status   Status
-	stopCh   chan struct{}
-	m        sync.Mutex
-	initOnce sync.Once
+	out       io.Writer
+	logger    *log.Logger
+	status    Status
+	stopCh    chan struct{}
+	m         sync.Mutex
+	initOnce  sync.Once
+	exitHooks []func()
 }
 
 func NewPogger(out io.Writer, prefix string, flag int) *Pogger {
@@ -103,17 +104,21 @@ func (p *Pogger) Errorf(format string, v ...any) {
 
 func (p *Pogger) Fatal(v ...any) {
 	p.Error(v...)
-	os.Exit(1)
+	p.exit(1)
 }
 
 func (p *Pogger) Fatalln(v ...any) {
 	p.Errorln(v...)
-	os.Exit(1)
+	p.exit(1)
 }
 
 func (p *Pogger) Fatalf(format string, v ...any) {
 	p.Errorf(format, v...)
-	os.Exit(1)
+	p.exit(1)
+}
+
+func (p *Pogger) AddExitHook(fn func()) {
+	p.exitHooks = append(p.exitHooks, fn)
 }
 
 func (p *Pogger) Stop() {
@@ -154,6 +159,13 @@ L:
 	}
 }
 
+func (p *Pogger) exit(code int) {
+	for _, fn := range p.exitHooks {
+		fn()
+	}
+	os.Exit(code)
+}
+
 type Status interface {
 	Icon() byte
 	Text() string
@@ -190,3 +202,4 @@ func Fatal(v ...any)                 { defaultPogger.Fatal(v...) }
 func Fatalln(v ...any)               { defaultPogger.Fatalln(v...) }
 func Fatalf(format string, v ...any) { defaultPogger.Fatalf(format, v...) }
 func Stop()                          { defaultPogger.Stop() }
+func AddExitHook(fn func())          { defaultPogger.AddExitHook(fn) }
