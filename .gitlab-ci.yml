@@ -5,7 +5,7 @@ stages:
   - release
 
 lint:
-  image: cardboard/golang:1.19.4
+  image: cardboard/golang:1.21.1
   stage: lint
   script:
   - make lint.tools.install
@@ -21,7 +21,7 @@ lint:
   interruptible: true
 
 build:
-  image: cardboard/golang:1.19.4
+  image: cardboard/golang:1.21.1
   stage: build
   script:
   - go build -o printd .
@@ -40,7 +40,7 @@ build:
   interruptible: true
 
 test:
-  image: cardboard/golang:1.19.4
+  image: cardboard/golang:1.21.1
   stage: test
   script:
   - make test
