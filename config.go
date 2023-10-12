@@ -12,12 +12,14 @@ type Config struct {
 	Printd  ConfigPrintd
 	Printer ConfigPrinter
 	Toph    ConfigToph
+	Debug   ConfigDebug
 }
 
 func (c *Config) initDefaults() {
 	c.Printd.initDefaults()
 	c.Printer.initDefaults()
 	c.Toph.initDefaults()
+	c.Debug.initDefaults()
 }
 
 type ConfigPrintd struct {
@@ -73,6 +75,14 @@ type ConfigToph struct {
 func (c *ConfigToph) initDefaults() {
 	c.BaseURL = "https://toph.co"
 	c.Timeout = 30 * time.Second
+}
+
+type ConfigDebug struct {
+	DontPrint bool
+}
+
+func (c *ConfigDebug) initDefaults() {
+	c.DontPrint = false
 }
 
 func parseConfig() (cfg Config, err error) {

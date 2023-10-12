@@ -210,6 +210,7 @@ func testDaemon(t *testing.T, token, contestid string, queue *Queue) (doneids []
 	cfg.Toph.BaseURL = srv.URL
 	cfg.Toph.Token = token
 	cfg.Toph.ContestID = contestid
+	cfg.Debug.DontPrint = true
 	exitch := make(chan struct{})
 	abortch := make(chan error, 1)
 	wg := sync.WaitGroup{}

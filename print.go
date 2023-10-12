@@ -64,9 +64,11 @@ func runPrintJob(ctx context.Context, cfg Config, pr Print) (PDF, error) {
 		return PDF{}, err
 	}
 
-	err = printPDF(cfg, name)
-	if err != nil {
-		return PDF{}, err
+	if !cfg.Debug.DontPrint {
+		err = printPDF(cfg, name)
+		if err != nil {
+			return PDF{}, err
+		}
 	}
 
 	if !cfg.Printd.KeepPDF {
