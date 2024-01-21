@@ -81,12 +81,6 @@ func main() {
 	abortch := make(chan error, 1)
 	sigch := make(chan os.Signal, 2)
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		pulseLoop(cfg, exitch)
-	}()
-
 	pog.Info("Connecting to Toph")
 	params, err := fetchParameters(ctx, cfg)
 	var terr tophError
@@ -102,6 +96,12 @@ func main() {
 		close(abortch)
 
 	} else {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			pulseLoop(cfg, exitch)
+		}()
+
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
