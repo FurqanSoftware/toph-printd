@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/FurqanSoftware/pog"
+	"github.com/alexbrainman/printer"
 )
 
 func printPDF(cfg Config, name string) error {
@@ -25,6 +26,17 @@ func checkDependencies() {
 }
 
 func checkPrinter(cfg Config) error {
-	// TODO: We have to implement printer check for Windows.
-	return nil
+	names, err := printer.ReadNames()
+	if err != nil {
+		return err
+	}
+	for _, name := range names {
+		if cfg.Printer.Name == "" {
+			return nil
+		}
+		if name == cfg.Printer.Name {
+			return nil
+		}
+	}
+	return errPrinterNotExist
 }
