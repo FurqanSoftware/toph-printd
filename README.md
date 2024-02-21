@@ -110,6 +110,16 @@ We release Printd binaries for 386, amd64, and arm64 architectures.
 
 </details>
 
+<details open>
+
+<summary><b>Windows says, "Windows protected your PC", and prevents Printd from running. What should I do?</b></summary>
+
+_"Windows protected your PC."_ Sure... :clap:
+
+To work around this, click the small "More info" link. Then click on the "Run anyway" button.
+
+</details>
+
 ## To-dos
 
 - [x] Windows support
