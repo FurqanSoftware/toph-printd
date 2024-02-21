@@ -1,0 +1,21 @@
+{
+    "FixedFileInfo": {
+        "FileFlagsMask": "3f",
+        "FileFlags ": "00",
+        "FileOS": "040004",
+        "FileType": "01",
+        "FileSubType": "00"
+    },
+    "StringFileInfo": {
+        "CompanyName": "Furqan Software Ltd.",
+        "ProductName": "Printd",
+        "LegalCopyright": "© 2015-2024 Furqan Software Ltd."
+    },
+    "VarFileInfo": {
+        "Translation": {
+            "LangID": "0409",
+            "CharsetID": "04B0"
+        }
+    },
+    "IconPath": "icons/icon.ico"
+}

@@ -8,6 +8,12 @@ builds:
     goos:
       - linux
       - windows
+    hooks:
+      pre:
+        - cmd: make goversioninfo
+          env:
+            - GOOS={{.Os}}
+            - GOARCH={{.Arch}}
 archives:
   - format_overrides:
       - goos: windows
