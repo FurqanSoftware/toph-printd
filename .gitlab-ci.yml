@@ -8,60 +8,60 @@ lint:
   image: cardboard/golang:1.21.1
   stage: lint
   script:
-  - make lint.tools.install
-  - make lint
+    - make lint.tools.install
+    - make lint
   rules:
-  - changes:
-    - "**/*.go"
-  - if: "$CI_COMMIT_TAG"
+    - changes:
+        - "**/*.go"
+    - if: "$CI_COMMIT_TAG"
   cache:
     key: go
     paths:
-    - ".go-build"
+      - ".go-build"
   interruptible: true
 
 build:
   image: cardboard/golang:1.21.1
   stage: build
   script:
-  - go build -o printd .
+    - go build -o printd .
   rules:
-  - changes:
-    - "**/*.go"
-  - if: "$CI_COMMIT_TAG"
+    - changes:
+        - "**/*.go"
+    - if: "$CI_COMMIT_TAG"
   artifacts:
     expire_in: 3 hours
     paths:
-    - printd
+      - printd
   cache:
     key: go
     paths:
-    - ".go-build"
+      - ".go-build"
   interruptible: true
 
 test:
   image: cardboard/golang:1.21.1
   stage: test
   script:
-  - make test
+    - make test
   rules:
-  - changes:
-    - "**/*.go"
-  - if: "$CI_COMMIT_TAG"
+    - changes:
+        - "**/*.go"
+    - if: "$CI_COMMIT_TAG"
   needs:
-  - build
+    - build
   cache:
     key: go
     paths:
-    - ".go-build"
+      - ".go-build"
     policy: pull
   interruptible: true
 
 release:
   stage: release
   image:
-    name: goreleaser/goreleaser:v1.14.1
-    entrypoint: ['']
+    name: goreleaser/goreleaser:v2.8.1
+    entrypoint: [""]
   only:
     - tags
   variables:

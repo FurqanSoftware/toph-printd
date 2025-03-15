@@ -1,3 +1,4 @@
+version: 2
 project_name: printd
 before:
   hooks:
@@ -17,7 +18,8 @@ builds:
 archives:
   - format_overrides:
       - goos: windows
-        format: zip
+        formats:
+          - zip
     files:
       - LICENSE.txt
       - README.md
@@ -27,12 +29,12 @@ release:
     owner: FurqanSoftware
     name: toph-printd
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  version_template: "{{ incpatch .Version }}-next"
 changelog:
   sort: asc
   filters:
     exclude:
-      - '^docs:'
-      - '^test:'
+      - "^docs:"
+      - "^test:"
