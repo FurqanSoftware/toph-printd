@@ -1,6 +1,6 @@
 module github.com/FurqanSoftware/toph-printd
 
-go 1.21
+go 1.24.1
 
 require (
 	github.com/BurntSushi/toml v1.2.1
