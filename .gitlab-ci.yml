@@ -5,7 +5,7 @@ stages:
   - release
 
 lint:
-  image: cardboard/golang:1.24.1
+  image: registry.furqansoftware.net/cardboard/golang:1.24.1-bullseye-0
   stage: lint
   script:
     - make lint.tools.install
@@ -21,7 +21,7 @@ lint:
   interruptible: true
 
 build:
-  image: cardboard/golang:1.24.1
+  image: registry.furqansoftware.net/cardboard/golang:1.24.1-bullseye-0
   stage: build
   script:
     - go build -o printd .
@@ -40,7 +40,7 @@ build:
   interruptible: true
 
 test:
-  image: cardboard/golang:1.24.1
+  image: registry.furqansoftware.net/cardboard/golang:1.24.1-bullseye-0
   stage: test
   script:
     - make test
