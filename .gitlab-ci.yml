@@ -3,6 +3,7 @@ stages:
   - build
   - test
   - release
+  - publish
 
 lint:
   image: registry.furqansoftware.net/cardboard/golang:1.24.1-bullseye-0
@@ -13,6 +14,8 @@ lint:
   rules:
     - changes:
         - "**/*.go"
+        - .gitlab-ci.yml
+        - Makefile
     - if: "$CI_COMMIT_TAG"
   cache:
     key: go
@@ -28,6 +31,8 @@ build:
   rules:
     - changes:
         - "**/*.go"
+        - .gitlab-ci.yml
+        - Makefile
     - if: "$CI_COMMIT_TAG"
   artifacts:
     expire_in: 3 hours
@@ -47,6 +52,8 @@ test:
   rules:
     - changes:
         - "**/*.go"
+        - .gitlab-ci.yml
+        - Makefile
     - if: "$CI_COMMIT_TAG"
   needs:
     - build
@@ -62,9 +69,26 @@ release:
   image:
     name: goreleaser/goreleaser:v2.8.1
     entrypoint: [""]
+  variables:
+    GIT_DEPTH: 0
+  script:
+    - make goversioninfo.install
+    - goreleaser release --clean --skip=publish `if [[ "$CI_COMMIT_TAG" == "" ]]; then echo --snapshot; fi`
+  artifacts:
+    expire_in: 3 hours
+    paths:
+      - dist/
+
+publish:
+  stage: publish
+  image:
+    name: goreleaser/goreleaser:v2.8.1
+    entrypoint: [""]
   only:
     - tags
   variables:
     GIT_DEPTH: 0
   script:
-    - goreleaser release --clean
+    - goreleaser publish
+  needs:
+    - release
