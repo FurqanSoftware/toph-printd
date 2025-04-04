@@ -3,7 +3,7 @@
 BUILD_TAG := $(shell git describe --tags)
 BUILD_TIME := $(shell date -u '+%Y-%m-%dT%H:%M:%SZ')
 
-PRINTD_EXT := 
+PRINTD_EXT :=
 ifeq ($(shell go env GOOS),windows)
 	PRINTD_EXT := .exe
 endif
@@ -47,3 +47,7 @@ endif
 .PHONY: goversioninfo.install
 goversioninfo.install:
 	go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo@v1.4.0
+
+.PHONY: goreleaser.install
+goreleaser.install:
+	go install github.com/goreleaser/goreleaser/v2@v2.8.2
