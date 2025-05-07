@@ -20,13 +20,18 @@ import (
 )
 
 var (
-	flagConfig string
+	flagConfig     string
+	flagRooms      string
+	flagRoomsSep   string
+	flagRoomPrefix string
 
 	version = ""
 	date    = ""
 
 	repoOwner = "FurqanSoftware"
 	repoName  = "toph-printd"
+
+	printdID = newID()
 )
 
 func main() {
@@ -39,6 +44,9 @@ func main() {
 	printBanner()
 
 	flag.StringVar(&flagConfig, "config", "printd-config.toml", "path to configuration file")
+	flag.StringVar(&flagRooms, "rooms", "", "list of rooms, up to 50")
+	flag.StringVar(&flagRoomsSep, "roomssep", ",", "separator string for rooms flag")
+	flag.StringVar(&flagRoomPrefix, "roomprefix", "", "select rooms by prefix, ignored if rooms is set")
 	flag.Parse()
 
 	ctx := context.Background()
@@ -52,6 +60,12 @@ func main() {
 		pog.Fatal("Could not parse configuration file")
 	}
 	catch(err)
+	if flagRooms != "" {
+		cfg.Scope.Rooms = strings.Split(flagRooms, flagRoomsSep)
+	}
+	if flagRoomPrefix != "" {
+		cfg.Scope.RoomPrefix = flagRoomPrefix
+	}
 	validateConfig(cfg)
 	logConfigSummary(cfg)
 
@@ -99,13 +113,18 @@ func main() {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			pulseLoop(cfg, exitch)
+			pulseLoop(cfg, printdID, exitch)
 		}()
 
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
 			pog.Info("Waiting for prints")
+			if len(cfg.Scope.Rooms) > 0 {
+				pog.Infof("∟ Rooms: %s", strings.Join(cfg.Scope.Rooms, ", "))
+			} else if cfg.Scope.RoomPrefix != "" {
+				pog.Infof("∟ Rooms (Prefix): %s", cfg.Scope.RoomPrefix)
+			}
 			Daemon{
 				cfg:           cfg,
 				params:        params,

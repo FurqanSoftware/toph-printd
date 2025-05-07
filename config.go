@@ -12,6 +12,7 @@ type Config struct {
 	Printd  ConfigPrintd
 	Printer ConfigPrinter
 	Toph    ConfigToph
+	Scope   ConfigScope
 	Debug   ConfigDebug
 }
 
@@ -75,6 +76,11 @@ type ConfigToph struct {
 func (c *ConfigToph) initDefaults() {
 	c.BaseURL = "https://toph.co"
 	c.Timeout = 30 * time.Second
+}
+
+type ConfigScope struct {
+	Rooms      []string
+	RoomPrefix string
 }
 
 type ConfigDebug struct {

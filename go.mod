@@ -11,6 +11,7 @@ require (
 	github.com/google/go-cmp v0.5.9
 	github.com/google/go-github/v53 v53.2.0
 	github.com/gorilla/mux v1.8.0
+	github.com/rs/xid v1.6.0
 	github.com/signintech/gopdf v0.15.1
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/mod v0.11.0

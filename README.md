@@ -54,6 +54,12 @@ For Toph, By Furqan Software (https://furqansoftware.com)
 Usage of ./printd:
   -config string
       path to configuration file (default "printd-config.toml")
+  -roomprefix string
+     	select rooms by prefix, ignored if rooms is set
+  -rooms string
+     	list of rooms, up to 50
+  -roomssep string
+     	separator string for rooms flag (default ",")
 ```
 
 ## Configuration
@@ -84,6 +90,10 @@ baseURL = "https://toph.co"
 token = "..."               # Collect your Printd token from Toph Support. The token is contest-specific.
 contestID = "..."           # The 24-character hex ID of the contest goes here.
 timeout = "30s"             # Timeout duration for HTTP client.
+
+[scope]
+rooms = []      # List of rooms, up to 50. Example: ["Bldg A Lab X", "Bldg A Lab Y"]
+roomPrefix = "" # Select rooms by prefix, ignored if rooms is not empty. Example: "Bldg B" matches "Bldg B Lab X", "Bldg B Lab Y", etc.
 ```
 
 ## Frequently Asked Questions

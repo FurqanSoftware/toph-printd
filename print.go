@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"time"
 )
@@ -23,7 +24,21 @@ type Print struct {
 func getNextPrint(ctx context.Context, cfg Config) (pr Print, err error) {
 	b := bytes.Buffer{}
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/printd/contests/%s/next_print", cfg.Toph.BaseURL, cfg.Toph.ContestID), nil)
+	q := url.Values{}
+	if len(cfg.Scope.Rooms) > 0 {
+		for _, room := range cfg.Scope.Rooms {
+			q.Add("rooms", room)
+		}
+	} else if cfg.Scope.RoomPrefix != "" {
+		q.Set("roomprefix", cfg.Scope.RoomPrefix)
+	}
+
+	u := fmt.Sprintf("%s/api/printd/contests/%s/next_print", cfg.Toph.BaseURL, cfg.Toph.ContestID)
+	if len(q) > 0 {
+		u += "?" + q.Encode()
+	}
+
+	req, err := http.NewRequest("GET", u, nil)
 	if err != nil {
 		return Print{}, err
 	}

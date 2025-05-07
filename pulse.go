@@ -8,7 +8,7 @@ import (
 	"github.com/FurqanSoftware/pog"
 )
 
-func pulseLoop(cfg Config, exitch chan struct{}) {
+func pulseLoop(cfg Config, printdid string, exitch chan struct{}) {
 L:
 	for {
 		var resp *http.Response
@@ -18,6 +18,7 @@ L:
 			goto retry
 		}
 		req.Header.Add("Authorization", "Printd "+cfg.Toph.Token)
+		req.Header.Add("Printd-ID", printdid)
 		resp, err = http.DefaultClient.Do(req)
 		if err != nil {
 			pog.Errorln("Could not send pulse:", err)
