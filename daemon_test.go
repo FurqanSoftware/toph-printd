@@ -21,18 +21,20 @@ func TestDaemon(t *testing.T) {
 	doneids, aborterr := testDaemon(t, "ZnZ0eW81bWw1NjMzc2dlYjI5azVuNThleDVzYjZ1aG8=", "6502f105025832238e865526", NewQueue([]Frame{
 		{
 			print: &Print{
-				ID:      "6502f46b17592a5a9e870928",
-				Header:  "Test Print 1",
-				Content: "Lorem ipsum dolor.",
-				Status:  "Queued",
+				ID:        "6502f46b17592a5a9e870928",
+				Header:    "Test Print 1",
+				Content:   "Lorem ipsum dolor.",
+				Status:    "Queued",
+				PageLimit: -1,
 			},
 		},
 		{
 			print: &Print{
-				ID:      "6502f9bf92c75c2f7874698e",
-				Header:  "Test Print 2",
-				Content: "The quick brown fox...",
-				Status:  "Queued",
+				ID:        "6502f9bf92c75c2f7874698e",
+				Header:    "Test Print 2",
+				Content:   "The quick brown fox...",
+				Status:    "Queued",
+				PageLimit: -1,
 			},
 		},
 	}))
@@ -54,10 +56,11 @@ func TestDaemonEmptyHeader(t *testing.T) {
 	doneids, aborterr := testDaemon(t, "dGlsa2c0em5lOG4waTl3MTl1d2prejVldmk5cGIycTU=", "6502fee52e058f9990cc5c6e", NewQueue([]Frame{
 		{
 			print: &Print{
-				ID:      "6502fec79eed503a402e0b59",
-				Header:  "",
-				Content: "Lorem ipsum dolor.",
-				Status:  "Queued",
+				ID:        "6502fec79eed503a402e0b59",
+				Header:    "",
+				Content:   "Lorem ipsum dolor.",
+				Status:    "Queued",
+				PageLimit: -1,
 			},
 		},
 	}))
@@ -76,10 +79,11 @@ func TestDaemonEmptyContent(t *testing.T) {
 	doneids, aborterr := testDaemon(t, "bWJocHBqMXA1aHRxbHpmMWo2bnNvYmhmcmVpYXlvdGQ=", "6502fee1c7bb2bf7288be9c7", NewQueue([]Frame{
 		{
 			print: &Print{
-				ID:      "6502fecc74093fd44c060e11",
-				Header:  "Keyboard Cat",
-				Content: "",
-				Status:  "Queued",
+				ID:        "6502fecc74093fd44c060e11",
+				Header:    "Keyboard Cat",
+				Content:   "",
+				Status:    "Queued",
+				PageLimit: -1,
 			},
 		},
 	}))
@@ -98,19 +102,21 @@ func TestDaemonBreak(t *testing.T) {
 	doneids, aborterr := testDaemon(t, "em95bHBmMTduM25wcDJyeTVucGd1bDI3MXB1d2V6ODM=", "6502fedddafbfc6ac0f20876", NewQueue([]Frame{
 		{
 			print: &Print{
-				ID:      "6502fed2ee36d5244aade158",
-				Header:  "Test Print 1",
-				Content: "Lorem ipsum dolor.",
-				Status:  "Queued",
+				ID:        "6502fed2ee36d5244aade158",
+				Header:    "Test Print 1",
+				Content:   "Lorem ipsum dolor.",
+				Status:    "Queued",
+				PageLimit: -1,
 			},
 		},
 		{},
 		{
 			print: &Print{
-				ID:      "6502fed88ea6c9620b82bf5a",
-				Header:  "Test Print 2",
-				Content: "The quick brown fox...",
-				Status:  "Queued",
+				ID:        "6502fed88ea6c9620b82bf5a",
+				Header:    "Test Print 2",
+				Content:   "The quick brown fox...",
+				Status:    "Queued",
+				PageLimit: -1,
 			},
 		},
 	}))
@@ -140,18 +146,20 @@ func TestDaemonLocked(t *testing.T) {
 	doneids, aborterr := testDaemon(t, "bTZwamc4bzA0MXozMXRvcDFpaTVyZmh6NHFuM3phdGY=", "65035553170f1faf07aac1ad", NewQueue([]Frame{
 		{
 			print: &Print{
-				ID:      "6503554aad610a1d499e9a70",
-				Header:  "Test Print 1",
-				Content: "Lorem ipsum dolor.",
-				Status:  "Queued",
+				ID:        "6503554aad610a1d499e9a70",
+				Header:    "Test Print 1",
+				Content:   "Lorem ipsum dolor.",
+				Status:    "Queued",
+				PageLimit: -1,
 			},
 		},
 		{
 			print: &Print{
-				ID:      "65035545d32aebbef6dff9fe",
-				Header:  "Test Print 2",
-				Content: "The quick brown fox...",
-				Status:  "Queued",
+				ID:        "65035545d32aebbef6dff9fe",
+				Header:    "Test Print 2",
+				Content:   "The quick brown fox...",
+				Status:    "Queued",
+				PageLimit: -1,
 			},
 		},
 		{
