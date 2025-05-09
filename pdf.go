@@ -65,6 +65,9 @@ func (b PDFBuilder) Build(name string, pr Print) (PDF, error) {
 			return PDF{}, err
 		}
 	}
+	if len(lines) == 0 {
+		lines = append(lines, "")
+	}
 
 	if b.cfg.Printd.ReduceBlankLines {
 		lines = reduceBlankLines(lines)
@@ -74,9 +77,13 @@ func (b PDFBuilder) Build(name string, pr Print) (PDF, error) {
 
 	pageno := 0
 	for i, l := range lines {
-		newpage := false
+		var newpage, atlimit, overlimit bool
+		if pr.PageLimit != -1 {
+			atlimit = pageno >= pr.PageLimit
+			overlimit = pageno+1 > pr.PageLimit
+		}
 		if i == 0 || b.isNextLineNewPage(&pdf, pagesize) {
-			if pr.PageLimit != -1 && (pageno+1) > pr.PageLimit {
+			if overlimit {
 				break
 			}
 			newpage = true
@@ -86,7 +93,7 @@ func (b PDFBuilder) Build(name string, pr Print) (PDF, error) {
 			b.newLine(&pdf)
 		}
 		if newpage {
-			b.header(&pdf, headerlines, i == 0, pageno, npages, pr.PageLimit)
+			b.header(&pdf, headerlines, i == 0, pageno, npages, atlimit)
 		}
 		err = pdf.Cell(nil, l)
 		if err != nil {
@@ -113,7 +120,7 @@ func (b PDFBuilder) Build(name string, pr Print) (PDF, error) {
 	}, err
 }
 
-func (b PDFBuilder) header(pdf *gopdf.GoPdf, lines []string, firstpage bool, pageno, npages, pagelimit int) error {
+func (b PDFBuilder) header(pdf *gopdf.GoPdf, lines []string, firstpage bool, pageno, npages int, atlimit bool) error {
 	for _, l := range lines {
 		err := pdf.Cell(nil, l)
 		if err != nil {
@@ -123,7 +130,7 @@ func (b PDFBuilder) header(pdf *gopdf.GoPdf, lines []string, firstpage bool, pag
 	}
 	parts := []string{}
 	parts = append(parts, fmt.Sprintf("%d/%d", pageno, npages))
-	if pagelimit != -1 && pageno >= pagelimit {
+	if atlimit {
 		parts = append(parts, "Limit Reached")
 	}
 	if firstpage {
