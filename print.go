@@ -98,12 +98,14 @@ func runPrintJob(ctx context.Context, cfg Config, pr Print) (PDF, error) {
 }
 
 type Done struct {
-	PageCount int `json:"pageCount"`
+	PageCount   int `json:"pageCount"`
+	PageSkipped int `json:"pageSkipped"`
 }
 
 func markPrintDone(ctx context.Context, cfg Config, pr Print, pdf PDF) error {
 	body := Done{
-		PageCount: pdf.PageCount,
+		PageCount:   pdf.PageCount,
+		PageSkipped: pdf.PageSkipped,
 	}
 	b, err := json.Marshal(body)
 	if err != nil {
