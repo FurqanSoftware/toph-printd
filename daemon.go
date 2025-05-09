@@ -61,6 +61,10 @@ func (d Daemon) iter(ctx context.Context) (stop bool, delay time.Duration) {
 	d.pog.SetStatus(statusPrinting)
 
 	d.pog.Infof("Printing %s", pr.ID)
+	d.pog.Infof("∟ Header: %s", pr.Header)
+	if pr.PageLimit != -1 {
+		d.pog.Infof("∟ Limit: %d", pr.PageLimit)
+	}
 	pdf, err := runPrintJob(ctx, d.cfg, pr)
 	catch(err)
 	err = retry.Do(func() error {
@@ -81,6 +85,11 @@ func (d Daemon) iter(ctx context.Context) (stop bool, delay time.Duration) {
 		return false, d.cfg.Printd.DelayError
 	}
 	catch(err)
+	if pdf.PageSkipped > 0 {
+		d.pog.Infof("∟ Pages: %d (Skipped: %d)", pdf.PageCount, pdf.PageSkipped)
+	} else {
+		d.pog.Infof("∟ Pages: %d", pdf.PageCount)
+	}
 	d.pog.Info("∟ Done")
 
 	return false, d.cfg.Printd.DelayAfter
