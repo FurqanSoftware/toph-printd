@@ -79,7 +79,7 @@ func (b PDFBuilder) Build(name string, pr Print) (PDF, error) {
 	for i, l := range lines {
 		var newpage, atlimit, overlimit bool
 		if pr.PageLimit != -1 {
-			atlimit = pageno >= pr.PageLimit
+			atlimit = pageno+1 >= pr.PageLimit
 			overlimit = pageno+1 > pr.PageLimit
 		}
 		if i == 0 || b.isNextLineNewPage(&pdf, pagesize) {
