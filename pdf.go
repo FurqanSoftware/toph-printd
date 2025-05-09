@@ -15,8 +15,9 @@ type PDFBuilder struct {
 }
 
 type PDF struct {
-	Name      string
-	PageCount int
+	Name        string
+	PageCount   int
+	PageSkipped int
 }
 
 func (b PDFBuilder) Build(name string, pr Print) (PDF, error) {
@@ -73,14 +74,19 @@ func (b PDFBuilder) Build(name string, pr Print) (PDF, error) {
 
 	pageno := 0
 	for i, l := range lines {
-		y := pdf.GetY()
+		newpage := false
+		if i == 0 || b.isNextLineNewPage(&pdf, pagesize) {
+			if pr.PageLimit != -1 && (pageno+1) > pr.PageLimit {
+				break
+			}
+			newpage = true
+			pageno++
+		}
 		if i > 0 {
 			b.newLine(&pdf)
 		}
-		if i == 0 || pdf.GetY() < y {
-			// New page
-			pageno++
-			b.header(&pdf, headerlines, i == 0, pageno, npages)
+		if newpage {
+			b.header(&pdf, headerlines, i == 0, pageno, npages, pr.PageLimit)
 		}
 		err = pdf.Cell(nil, l)
 		if err != nil {
@@ -88,18 +94,26 @@ func (b PDFBuilder) Build(name string, pr Print) (PDF, error) {
 		}
 	}
 
-	err = pdf.WritePdf(name)
-	if err != nil {
-		return PDF{}, err
+	if pageno > 0 {
+		err = pdf.WritePdf(name)
+		if err != nil {
+			return PDF{}, err
+		}
+	}
+
+	pageskipped := 0
+	if pageno < npages {
+		pageskipped = npages - pageno
 	}
 
 	return PDF{
-		Name:      name,
-		PageCount: npages,
+		Name:        name,
+		PageCount:   pageno,
+		PageSkipped: pageskipped,
 	}, err
 }
 
-func (b PDFBuilder) header(pdf *gopdf.GoPdf, lines []string, first bool, pageno, npages int) error {
+func (b PDFBuilder) header(pdf *gopdf.GoPdf, lines []string, firstpage bool, pageno, npages, pagelimit int) error {
 	for _, l := range lines {
 		err := pdf.Cell(nil, l)
 		if err != nil {
@@ -107,20 +121,24 @@ func (b PDFBuilder) header(pdf *gopdf.GoPdf, lines []string, first bool, pageno,
 		}
 		b.newLine(pdf)
 	}
+	parts := []string{}
+	parts = append(parts, fmt.Sprintf("%d/%d", pageno, npages))
+	if pagelimit != -1 && pageno >= pagelimit {
+		parts = append(parts, "Limit Reached")
+	}
+	if firstpage {
+		parts = append(parts, "·", b.cfg.Toph.BaseURL)
+	}
 	pdf.SetTextColor(92, 104, 115)
-	var err error
-	if first {
-		err = pdf.Cell(nil, fmt.Sprintf("%d/%d · %s", pageno, npages, b.cfg.Toph.BaseURL))
-	} else {
-		err = pdf.Cell(nil, fmt.Sprintf("%d/%d", pageno, npages))
-	}
-	if err != nil {
-		return err
-	}
+	pdf.Cell(nil, strings.Join(parts, " "))
 	pdf.SetTextColor(0, 0, 0)
 	b.newLine(pdf)
 	b.newLine(pdf)
 	return nil
+}
+
+func (b PDFBuilder) isNextLineNewPage(pdf *gopdf.GoPdf, pagesize *gopdf.Rect) bool {
+	return pdf.GetY()+float64(b.cfg.Printd.LineHeight) > pagesize.H-pdf.MarginBottom()
 }
 
 func (b PDFBuilder) newLine(pdf *gopdf.GoPdf) {

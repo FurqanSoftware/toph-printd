@@ -17,6 +17,7 @@ type Print struct {
 	Header     string
 	Content    string
 	Status     string
+	PageLimit  int
 	CreatedAt  time.Time
 	ModifiedAt time.Time
 }
@@ -79,7 +80,7 @@ func runPrintJob(ctx context.Context, cfg Config, pr Print) (PDF, error) {
 		return PDF{}, err
 	}
 
-	if !cfg.Debug.DontPrint {
+	if !cfg.Debug.DontPrint && pdf.PageCount > 0 {
 		err = printPDF(cfg, name)
 		if err != nil {
 			return PDF{}, err
