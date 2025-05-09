@@ -34,7 +34,20 @@ func (e noNextPrintError) Error() string {
 	return "no next print available"
 }
 
+type printDispatchError struct {
+	error
+}
+
+func (e printDispatchError) Unwrap() error {
+	return e.error
+}
+
+func (e printDispatchError) Error() string {
+	return fmt.Sprintf("could not dispatch print: %s", e.error.Error())
+}
+
 var (
-	errInvalidToken    = errors.New("invalid token")
-	errPrinterNotExist = errors.New("printer does not exist")
+	errInvalidToken     = errors.New("invalid token")
+	errPrinterNotExist  = errors.New("printer does not exist")
+	errNoDefaultPrinter = errors.New("no default printer")
 )

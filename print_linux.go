@@ -3,6 +3,8 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"errors"
+	"fmt"
 	"os/exec"
 
 	"github.com/FurqanSoftware/pog"
@@ -15,7 +17,18 @@ func printPDF(cfg Config, name string) error {
 	}
 	args = append(args, name)
 	cmd := exec.Command("lpr", args...)
-	return cmd.Run()
+	_, err := cmd.Output()
+	if err != nil {
+		var exiterr *exec.ExitError
+		if errors.As(err, &exiterr) {
+			if exiterr.ExitCode() == 1 && bytes.HasPrefix(exiterr.Stderr, []byte("lpr: Error - No default destination.")) {
+				return printDispatchError{error: errNoDefaultPrinter}
+			}
+			return printDispatchError{fmt.Errorf("%w: %s", err, ellipsize(string(exiterr.Stderr), 50, "..."))}
+		}
+		return printDispatchError{err}
+	}
+	return nil
 }
 
 func checkDependencies() {

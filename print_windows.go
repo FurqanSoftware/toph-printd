@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"os/exec"
 	"strconv"
 
@@ -15,7 +17,15 @@ func printPDF(cfg Config, name string) error {
 		args = append(args, strconv.Quote(cfg.Printer.Name))
 	}
 	cmd := exec.Command(`.\PDFtoPrinter.exe`, args...)
-	return cmd.Run()
+	_, err := cmd.Output()
+	if err != nil {
+		var exiterr *exec.ExitError
+		if errors.As(err, &exiterr) {
+			return printDispatchError{fmt.Errorf("%w: %s", err, ellipsize(string(exiterr.Stderr), 50, "..."))}
+		}
+		return printDispatchError{err}
+	}
+	return nil
 }
 
 func checkDependencies() {
