@@ -6,7 +6,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/FurqanSoftware/pog"
 	"github.com/signintech/gopdf"
 )
 
@@ -22,24 +21,17 @@ type PDF struct {
 
 func (b PDFBuilder) Build(name string, pr Print) (PDF, error) {
 	pdf := gopdf.GoPdf{}
-
-	pagesize := gopdfPageSizes[b.cfg.Printer.PageSize]
-	pdf.Start(gopdf.Config{PageSize: *pagesize})
-
-	pdf.SetMargins(b.cfg.Printd.MarginLeft, b.cfg.Printd.MarginTop, b.cfg.Printd.MarginRight, b.cfg.Printd.MarginBottom)
-
-	pdf.AddPage()
-	err := pdf.AddTTFFontData("Ubuntu Mono", ubuntuMonoR)
-	if err != nil {
-		pog.Fatal(err)
-		return PDF{}, nil
-	}
-	err = pdf.SetFont("Ubuntu Mono", "", b.cfg.Printd.FontSize)
+	err := b.applySetup(&pdf)
 	if err != nil {
 		return PDF{}, err
 	}
 
-	linesperpage := int((pagesize.H - (b.cfg.Printd.MarginTop + b.cfg.Printd.MarginBottom)) / b.cfg.Printd.LineHeight)
+	linesperpage, err := b.linesPerPage()
+	if err != nil {
+		return PDF{}, err
+	}
+
+	contentwidth := b.contentWidth(&pdf)
 
 	header := pr.Header
 	header += " · " + pr.CreatedAt.In(time.Local).Format(time.DateTime)
@@ -49,7 +41,7 @@ func (b PDFBuilder) Build(name string, pr Print) (PDF, error) {
 	}
 	var headerlines []string
 	if header != "" {
-		headerlines, err = pdf.SplitText(header, pagesize.W-pdf.MarginLeft()-pdf.MarginRight())
+		headerlines, err = pdf.SplitText(header, contentwidth)
 		if err != nil {
 			return PDF{}, err
 		}
@@ -60,7 +52,7 @@ func (b PDFBuilder) Build(name string, pr Print) (PDF, error) {
 	content := b.tabToSpaces(pr.Content)
 	var lines []string
 	if content != "" {
-		lines, err = pdf.SplitText(content, pagesize.W-pdf.MarginLeft()-pdf.MarginRight())
+		lines, err = pdf.SplitText(content, contentwidth)
 		if err != nil {
 			return PDF{}, err
 		}
@@ -73,7 +65,7 @@ func (b PDFBuilder) Build(name string, pr Print) (PDF, error) {
 		lines = reduceBlankLines(lines)
 	}
 
-	npages := int((len(lines) + (linesperpage)) / linesperpage)
+	npages := int((len(lines) + linesperpage - 1) / linesperpage)
 
 	pageno := 0
 	for i, l := range lines {
@@ -82,7 +74,7 @@ func (b PDFBuilder) Build(name string, pr Print) (PDF, error) {
 			atlimit = pageno+1 >= pr.PageLimit
 			overlimit = pageno+1 > pr.PageLimit
 		}
-		if i == 0 || b.isNextLineNewPage(&pdf, pagesize) {
+		if i == 0 || b.isNextLineNewPage(&pdf) {
 			if overlimit {
 				break
 			}
@@ -120,6 +112,26 @@ func (b PDFBuilder) Build(name string, pr Print) (PDF, error) {
 	}, err
 }
 
+func (b PDFBuilder) applySetup(pdf *gopdf.GoPdf) error {
+	pagesize := gopdfPageSizes[b.cfg.Printer.PageSize]
+	pdf.Start(gopdf.Config{PageSize: *pagesize})
+
+	pdf.SetMargins(b.cfg.Printd.MarginLeft, b.cfg.Printd.MarginTop, b.cfg.Printd.MarginRight, b.cfg.Printd.MarginBottom)
+
+	pdf.AddPage()
+
+	err := pdf.AddTTFFontData("Ubuntu Mono", ubuntuMonoR)
+	if err != nil {
+		return err
+	}
+	err = pdf.SetFont("Ubuntu Mono", "", b.cfg.Printd.FontSize)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (b PDFBuilder) header(pdf *gopdf.GoPdf, lines []string, firstpage bool, pageno, npages int, atlimit bool) error {
 	for _, l := range lines {
 		err := pdf.Cell(nil, l)
@@ -144,7 +156,29 @@ func (b PDFBuilder) header(pdf *gopdf.GoPdf, lines []string, firstpage bool, pag
 	return nil
 }
 
-func (b PDFBuilder) isNextLineNewPage(pdf *gopdf.GoPdf, pagesize *gopdf.Rect) bool {
+func (b PDFBuilder) linesPerPage() (int, error) {
+	pdf := gopdf.GoPdf{}
+	err := b.applySetup(&pdf)
+	if err != nil {
+		return 0, err
+	}
+	pdf.AddPage()
+	for n := 1; ; n++ {
+		y := pdf.GetY()
+		b.newLine(&pdf)
+		if pdf.GetY() < y {
+			return n, nil
+		}
+	}
+}
+
+func (b PDFBuilder) contentWidth(pdf *gopdf.GoPdf) float64 {
+	pagesize := gopdfPageSizes[b.cfg.Printer.PageSize]
+	return pagesize.W - pdf.MarginLeft() - pdf.MarginRight()
+}
+
+func (b PDFBuilder) isNextLineNewPage(pdf *gopdf.GoPdf) bool {
+	pagesize := gopdfPageSizes[b.cfg.Printer.PageSize]
 	return pdf.GetY()+float64(b.cfg.Printd.LineHeight) > pagesize.H-pdf.MarginBottom()
 }
 
