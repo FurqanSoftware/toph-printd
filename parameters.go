@@ -17,7 +17,7 @@ type Parameters struct {
 func fetchParameters(ctx context.Context, cfg Config) (params Parameters, err error) {
 	b := bytes.Buffer{}
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/printd/contests/%s/parameters", cfg.Toph.BaseURL, cfg.Toph.ContestID), nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/api/printd/contests/%s/parameters", cfg.Toph.BaseURL, cfg.Toph.ContestID), nil)
 	if err != nil {
 		return Parameters{}, err
 	}

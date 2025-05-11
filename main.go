@@ -113,7 +113,7 @@ func main() {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			pulseLoop(cfg, printdID, exitch)
+			pulseLoop(ctx, cfg, printdID, exitch)
 		}()
 
 		wg.Add(1)

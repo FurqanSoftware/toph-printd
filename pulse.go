@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"time"
@@ -8,11 +9,11 @@ import (
 	"github.com/FurqanSoftware/pog"
 )
 
-func pulseLoop(cfg Config, printdid string, exitch chan struct{}) {
+func pulseLoop(ctx context.Context, cfg Config, printdid string, exitch chan struct{}) {
 L:
 	for {
 		var resp *http.Response
-		req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/printd/pulse?contest=%s", cfg.Toph.BaseURL, cfg.Toph.ContestID), nil)
+		req, err := http.NewRequestWithContext(ctx, "POST", fmt.Sprintf("%s/api/printd/pulse?contest=%s", cfg.Toph.BaseURL, cfg.Toph.ContestID), nil)
 		if err != nil {
 			pog.Error(err)
 			goto retry

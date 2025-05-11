@@ -39,7 +39,7 @@ func getNextPrint(ctx context.Context, cfg Config) (pr Print, err error) {
 		u += "?" + q.Encode()
 	}
 
-	req, err := http.NewRequest("GET", u, nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", u, nil)
 	if err != nil {
 		return Print{}, err
 	}
@@ -103,15 +103,17 @@ type Done struct {
 }
 
 func markPrintDone(ctx context.Context, cfg Config, pr Print, pdf PDF) error {
-	body := Done{
+	body, err := json.Marshal(Done{
 		PageCount:   pdf.PageCount,
 		PageSkipped: pdf.PageSkipped,
-	}
-	b, err := json.Marshal(body)
+	})
 	if err != nil {
 		return err
 	}
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/printd/prints/%s/mark_done?contest=%s", cfg.Toph.BaseURL, pr.ID, cfg.Toph.ContestID), bytes.NewReader(b))
+	req, err := http.NewRequestWithContext(ctx, "POST", fmt.Sprintf("%s/api/printd/prints/%s/mark_done?contest=%s", cfg.Toph.BaseURL, pr.ID, cfg.Toph.ContestID), bytes.NewReader(body))
+	if err != nil {
+		return err
+	}
 	req.Header.Add("Authorization", "Printd "+cfg.Toph.Token)
 	if err != nil {
 		return err
