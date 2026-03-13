@@ -8,7 +8,6 @@ require (
 	github.com/alexbrainman/printer v0.0.0-20200912035444-f40f26f0bdeb
 	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/fatih/color v1.14.1
-	github.com/google/go-cmp v0.5.9
 	github.com/google/go-github/v53 v53.2.0
 	github.com/gorilla/mux v1.8.0
 	github.com/rs/xid v1.6.0
