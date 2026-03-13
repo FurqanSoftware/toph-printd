@@ -32,7 +32,10 @@ Linux:
 
 Windows:
 
-- [PDFtoPrinter](http://www.columbia.edu/~em36/pdftoprinter.html): Printd uses `PDFtoPrinter` to dispatch the print job to the printer. Download PDFtoPrinter.exe and put it in the same directory as printd.exe.
+- [PDFtoPrinter](http://www.columbia.edu/~em36/pdftoprinter.html): Printd can use `PDFtoPrinter` to dispatch the print job to the printer. Download PDFtoPrinter.exe and put it in the same directory as printd.exe.
+- [SumatraPDF](https://www.sumatrapdfreader.com/): Printd can use `SumatraPDF` to dispatch the print job to the printer. Download SumatraPDF.exe and put it in the same directory as printd.exe.
+
+By default, Printd auto-detects which print helper is available. If both are present, PDFtoPrinter is preferred. You can override this with `printHelper` under the `[windows]` section of the configuration file.
 
 ## Usage
 
@@ -94,6 +97,9 @@ timeout = "30s"             # Timeout duration for HTTP client.
 [scope]
 rooms = []      # List of rooms, up to 50. Example: ["Bldg A Lab X", "Bldg A Lab Y"]
 roomPrefix = "" # Select rooms by prefix, ignored if rooms is not empty. Example: "Bldg B" matches "Bldg B Lab X", "Bldg B Lab Y", etc.
+
+[windows]
+printHelper = "auto" # Print helper to use. Use one of "auto", "pdf-to-printer", or "sumatra-pdf".
 ```
 
 ## Frequently Asked Questions

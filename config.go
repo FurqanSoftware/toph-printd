@@ -13,6 +13,7 @@ type Config struct {
 	Printer ConfigPrinter
 	Toph    ConfigToph
 	Scope   ConfigScope
+	Windows ConfigWindows
 	Debug   ConfigDebug
 }
 
@@ -20,6 +21,7 @@ func (c *Config) initDefaults() {
 	c.Printd.initDefaults()
 	c.Printer.initDefaults()
 	c.Toph.initDefaults()
+	c.Windows.initDefaults()
 	c.Debug.initDefaults()
 }
 
@@ -57,6 +59,14 @@ func (c *ConfigPrintd) initDefaults() {
 	c.Throbber = true
 }
 
+type PrintHelper string
+
+const (
+	PrintHelperAuto         PrintHelper = "auto"
+	PrintHelperPDFtoPrinter PrintHelper = "pdf-to-printer"
+	PrintHelperSumatraPDF   PrintHelper = "sumatra-pdf"
+)
+
 type ConfigPrinter struct {
 	Name     string
 	PageSize PageSize
@@ -64,6 +74,14 @@ type ConfigPrinter struct {
 
 func (c *ConfigPrinter) initDefaults() {
 	c.PageSize = PageA4
+}
+
+type ConfigWindows struct {
+	PrintHelper PrintHelper
+}
+
+func (c *ConfigWindows) initDefaults() {
+	c.PrintHelper = PrintHelperAuto
 }
 
 type ConfigToph struct {
@@ -124,6 +142,7 @@ func logConfigSummary(cfg Config) {
 		pog.Infof("∟ Printer: %s", cfg.Printer.Name)
 	}
 	pog.Infof("∟ Page Size: %s", cfg.Printer.PageSize)
+	logPlatformConfigSummary(cfg)
 }
 
 type PageSize string

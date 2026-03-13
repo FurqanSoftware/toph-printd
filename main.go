@@ -78,7 +78,8 @@ func main() {
 		color.NoColor = !cfg.Printd.LogColor
 	}
 
-	checkDependencies()
+	resolvePrintHelper(&cfg)
+	checkDependencies(cfg)
 	err = checkPrinter(cfg)
 	if errors.Is(err, errPrinterNotExist) {
 		if cfg.Printer.Name != "" {

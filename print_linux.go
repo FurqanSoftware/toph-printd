@@ -31,12 +31,16 @@ func printPDF(cfg Config, name string) error {
 	return nil
 }
 
-func checkDependencies() {
+func checkDependencies(cfg Config) {
 	_, err := exec.LookPath("lpr")
 	if err != nil {
 		pog.Fatal("Missing dependency: could not find lpr")
 	}
 }
+
+func resolvePrintHelper(cfg *Config) {}
+
+func logPlatformConfigSummary(cfg Config) {}
 
 func checkPrinter(cfg Config) error {
 	cmd := exec.Command("lpstat", "-p")
