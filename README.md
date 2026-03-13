@@ -139,4 +139,4 @@ To work around this, click the small "More info" link. Then click on the "Run an
 ## To-dos
 
 - [x] Windows support
-- [ ] Improve tab-to-spaces behavior
+- [x] Improve tab-to-spaces behavior

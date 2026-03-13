@@ -49,7 +49,7 @@ func (b PDFBuilder) Build(name string, pr Print) (PDF, error) {
 
 	linesperpage -= len(headerlines) + 2
 
-	content := b.tabToSpaces(pr.Content)
+	content := b.expandTabsInContent(pr.Content)
 	var lines []string
 	if content != "" {
 		lines, err = pdf.SplitText(content, contentwidth)
@@ -186,8 +186,31 @@ func (b PDFBuilder) newLine(pdf *gopdf.GoPdf) {
 	pdf.SetNewXY(pdf.GetY()+float64(b.cfg.Printd.LineHeight), pdf.MarginLeft(), float64(b.cfg.Printd.LineHeight))
 }
 
-func (b PDFBuilder) tabToSpaces(t string) string {
-	return strings.ReplaceAll(t, "\t", strings.Repeat(" ", b.cfg.Printd.TabSize))
+func (b PDFBuilder) expandTabsInContent(content string) string {
+	lines := strings.Split(content, "\n")
+	for i, l := range lines {
+		lines[i] = b.expandTabs(l)
+	}
+	return strings.Join(lines, "\n")
+}
+
+func (b PDFBuilder) expandTabs(line string) string {
+	tabSize := b.cfg.Printd.TabSize
+	var buf strings.Builder
+	col := 0
+	for _, r := range line {
+		if r == '\t' {
+			spaces := tabSize - col%tabSize
+			for j := 0; j < spaces; j++ {
+				buf.WriteByte(' ')
+			}
+			col += spaces
+		} else {
+			buf.WriteRune(r)
+			col++
+		}
+	}
+	return buf.String()
 }
 
 var (
