@@ -19,6 +19,8 @@
 # Go workspace file
 go.work
 
+/.task
+
 /printd
 /printd-config.toml
 /*.pdf

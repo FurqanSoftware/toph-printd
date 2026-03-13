@@ -1,0 +1,82 @@
+# Copyright 2026 Furqan Software Ltd. All rights reserved.
+
+version: "3"
+
+vars:
+  BUILD_TAG:
+    sh: git describe --tags
+  BUILD_TIME:
+    sh: date -u '+%Y-%m-%dT%H:%M:%SZ'
+  PRINTD_EXT:
+    sh: if [ "$(go env GOOS)" = "windows" ]; then echo ".exe"; fi
+  VERSION: '{{trimPrefix "v" .BUILD_TAG}}'
+  VERSION_BASE: '{{index (splitList "-" .VERSION) 0}}'
+  VER_MAJOR: '{{index (splitList "." .VERSION_BASE) 0}}'
+  VER_MINOR: '{{index (splitList "." .VERSION_BASE) 1}}'
+  VER_PATCH: '{{index (splitList "." .VERSION_BASE) 2}}'
+
+tasks:
+  default:
+    deps: [build]
+
+  build:
+    desc: Build printd
+    deps: [generate]
+    cmds:
+      - go build -ldflags "-X main.version={{.VERSION}} -X main.date={{.BUILD_TIME}}" -o printd{{.PRINTD_EXT}} .
+    sources:
+      - "**/*.go"
+      - go.mod
+      - go.sum
+    generates:
+      - printd{{.PRINTD_EXT}}
+
+  generate:
+    desc: Run go generate
+    cmds:
+      - go generate
+
+  lint:
+    desc: Run static analysis
+    cmds:
+      - staticcheck .
+
+  lint:tools:install:
+    desc: Install linting tools
+    cmds:
+      - go install honnef.co/go/tools/cmd/staticcheck@2025.1.1
+
+  test:
+    desc: Run tests
+    cmds:
+      - go test -race -v .
+
+  goversioninfo:
+    desc: Generate Windows version info resource (Windows only)
+    platforms: [windows]
+    cmds:
+      - >-
+        $(go env GOPATH)/bin/goversioninfo
+        -o="rsrc_$(go env GOOS)_$(go env GOARCH).syso"
+        -copyright="© 2015-{{now | date "2006"}} Furqan Software Ltd."
+        -file-version=v{{.VERSION}}
+        -product-version=v{{.VERSION}}
+        -ver-major={{.VER_MAJOR}}
+        -ver-minor={{.VER_MINOR}}
+        -ver-patch={{.VER_PATCH}}
+        -ver-build=0
+        -product-ver-major={{.VER_MAJOR}}
+        -product-ver-minor={{.VER_MINOR}}
+        -product-ver-patch={{.VER_PATCH}}
+        -product-ver-build=0
+        -arm={{if eq (env "GOARCH") "arm64"}}true{{else}}false{{end}}
+
+  goversioninfo:install:
+    desc: Install goversioninfo tool
+    cmds:
+      - go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo@v1.4.0
+
+  goreleaser:install:
+    desc: Install goreleaser tool
+    cmds:
+      - go install github.com/goreleaser/goreleaser/v2@v2.8.2
