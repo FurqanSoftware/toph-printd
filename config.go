@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -123,16 +125,21 @@ func parseConfig() (cfg Config, err error) {
 	return
 }
 
-func validateConfig(cfg Config) {
+func validateConfig(cfg Config) error {
+	var errs []string
 	if cfg.Toph.BaseURL == "" {
-		pog.Error("Incomplete configuration: missing Toph base URL")
+		errs = append(errs, "missing Toph base URL")
 	}
 	if cfg.Toph.Token == "" {
-		pog.Error("Incomplete configuration: missing token")
+		errs = append(errs, "missing token")
 	}
 	if cfg.Toph.ContestID == "" {
-		pog.Error("Incomplete configuration: missing contest ID")
+		errs = append(errs, "missing contest ID")
 	}
+	if len(errs) > 0 {
+		return fmt.Errorf("Incomplete configuration: %s", strings.Join(errs, ", "))
+	}
+	return nil
 }
 
 func logConfigSummary(cfg Config) {

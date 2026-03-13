@@ -66,7 +66,10 @@ func main() {
 	if flagRoomPrefix != "" {
 		cfg.Scope.RoomPrefix = flagRoomPrefix
 	}
-	validateConfig(cfg)
+	err = validateConfig(cfg)
+	if err != nil {
+		pog.Fatal(err)
+	}
 	logConfigSummary(cfg)
 
 	err = checkUpdate(ctx)
