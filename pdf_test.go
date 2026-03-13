@@ -5,7 +5,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/google/go-cmp/cmp"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -61,9 +60,7 @@ func TestExpandTabs(t *testing.T) {
 	} {
 		t.Run(c.name, func(t *testing.T) {
 			got := b.expandTabs(c.in)
-			if got != c.want {
-				t.Fatalf("expandTabs(%q) = %q, want %q", c.in, got, c.want)
-			}
+			assert.Equal(t, c.want, got)
 		})
 	}
 }
@@ -239,10 +236,7 @@ func TestReduceBlankLines(t *testing.T) {
 	} {
 		t.Run(c.name, func(t *testing.T) {
 			got := reduceBlankLines(c.in)
-			diff := cmp.Diff(got, c.want)
-			if diff != "" {
-				t.Fatalf("want: %q\ngot: %q\ndiff:\n%v", c.want, got, diff)
-			}
+			assert.Equal(t, c.want, got)
 		})
 	}
 }
