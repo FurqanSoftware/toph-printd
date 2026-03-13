@@ -185,11 +185,7 @@ func printBanner() {
 
 func catch(err error) {
 	if err != nil {
-		if version == "" {
-			panic(err)
-		} else {
-			pog.Fatalln("Fatal error:", err)
-		}
+		pog.Fatalln("Fatal error:", err)
 	}
 }
 
