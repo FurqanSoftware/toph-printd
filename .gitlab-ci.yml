@@ -5,7 +5,7 @@ stages:
   - release
 
 lint:
-  image: registry.furqansoftware.net/cardboard/golang:1.25.5-bullseye-1
+  image: registry.furqansoftware.net/cardboard/golang:1.26.1-bullseye-0
   stage: lint
   script:
     - task lint:tools:install
@@ -23,7 +23,7 @@ lint:
   interruptible: true
 
 build:
-  image: registry.furqansoftware.net/cardboard/golang:1.25.5-bullseye-1
+  image: registry.furqansoftware.net/cardboard/golang:1.26.1-bullseye-0
   stage: build
   script:
     - go build -o printd .
@@ -44,7 +44,7 @@ build:
   interruptible: true
 
 test:
-  image: registry.furqansoftware.net/cardboard/golang:1.25.5-bullseye-1
+  image: registry.furqansoftware.net/cardboard/golang:1.26.1-bullseye-0
   stage: test
   script:
     - task test
@@ -66,7 +66,7 @@ test:
 release:
   stage: release
   image:
-    name: registry.furqansoftware.net/cardboard/golang:1.25.5-bullseye-1
+    name: registry.furqansoftware.net/cardboard/golang:1.26.1-bullseye-0
   variables:
     GIT_DEPTH: 0
   script:
