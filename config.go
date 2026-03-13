@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"errors"
 	"os"
 	"strings"
 	"time"
@@ -126,18 +126,18 @@ func parseConfig() (cfg Config, err error) {
 }
 
 func validateConfig(cfg Config) error {
-	var errs []string
+	var msg []string
 	if cfg.Toph.BaseURL == "" {
-		errs = append(errs, "missing Toph base URL")
+		msg = append(msg, "missing Toph base URL")
 	}
 	if cfg.Toph.Token == "" {
-		errs = append(errs, "missing token")
+		msg = append(msg, "missing token")
 	}
 	if cfg.Toph.ContestID == "" {
-		errs = append(errs, "missing contest ID")
+		msg = append(msg, "missing contest ID")
 	}
-	if len(errs) > 0 {
-		return fmt.Errorf("Incomplete configuration: %s", strings.Join(errs, ", "))
+	if len(msg) != 0 {
+		return errors.New(strings.Join(msg, ", "))
 	}
 	return nil
 }

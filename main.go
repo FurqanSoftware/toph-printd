@@ -68,7 +68,7 @@ func main() {
 	}
 	err = validateConfig(cfg)
 	if err != nil {
-		pog.Fatal(err)
+		pog.Fatalln("Invalid configuration:", err)
 	}
 	logConfigSummary(cfg)
 
@@ -158,7 +158,7 @@ func main() {
 }
 
 func printBanner() {
-	fmt.Fprintln(log.Writer(), `  ____       _       _      _ 
+	fmt.Fprintln(log.Writer(), `  ____       _       _      _
  |  _ \ _ __(_)_ __ | |_ __| |
 `+" | |_) | '__| | '_ \\| __/ _` |"+`
  |  __/| |  | | | | | || (_| |
