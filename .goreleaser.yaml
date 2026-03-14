@@ -11,7 +11,7 @@ builds:
       - windows
     hooks:
       pre:
-        - cmd: make goversioninfo
+        - cmd: task goversioninfo
           env:
             - GOOS={{.Os}}
             - GOARCH={{.Arch}}
