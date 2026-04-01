@@ -135,8 +135,3 @@ _"Windows protected your PC."_ Sure... :clap:
 To work around this, click the small "More info" link. Then click on the "Run anyway" button.
 
 </details>
-
-## To-dos
-
-- [x] Windows support
-- [x] Improve tab-to-spaces behavior
