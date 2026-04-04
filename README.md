@@ -4,7 +4,7 @@
 
 Allow participants to request prints right from within Toph. Process print jobs locally using Printd.
 
-![](overview.png)
+![](cover.png)
 
 You will have to download Printd and run it on a local computer connected to a printer.
 
