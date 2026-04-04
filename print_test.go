@@ -20,7 +20,7 @@ func TestGetNextPrintForbidden(t *testing.T) {
 	cfg.initDefaults()
 	cfg.Toph.BaseURL = srv.URL
 	cfg.Toph.Token = "test-token"
-	cfg.Toph.ContestID = "abc123"
+	cfg.Toph.ContestID = "6502f105025832238e865526"
 
 	_, err := getNextPrint(context.Background(), cfg)
 	assert.Error(t, err)
@@ -41,7 +41,7 @@ func TestGetNextPrintServerError(t *testing.T) {
 	cfg.initDefaults()
 	cfg.Toph.BaseURL = srv.URL
 	cfg.Toph.Token = "test-token"
-	cfg.Toph.ContestID = "abc123"
+	cfg.Toph.ContestID = "6502f105025832238e865526"
 
 	_, err := getNextPrint(context.Background(), cfg)
 	assert.Error(t, err)
@@ -61,7 +61,7 @@ func TestGetNextPrintContextCanceled(t *testing.T) {
 	cfg.initDefaults()
 	cfg.Toph.BaseURL = srv.URL
 	cfg.Toph.Token = "test-token"
-	cfg.Toph.ContestID = "abc123"
+	cfg.Toph.ContestID = "6502f105025832238e865526"
 
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
@@ -82,7 +82,7 @@ func TestGetNextPrintNotFoundContestLocked(t *testing.T) {
 	cfg.initDefaults()
 	cfg.Toph.BaseURL = srv.URL
 	cfg.Toph.Token = "test-token"
-	cfg.Toph.ContestID = "abc123"
+	cfg.Toph.ContestID = "6502f105025832238e865526"
 
 	_, err := getNextPrint(context.Background(), cfg)
 	assert.Error(t, err)
@@ -102,7 +102,7 @@ func TestGetNextPrintNotFound(t *testing.T) {
 	cfg.initDefaults()
 	cfg.Toph.BaseURL = srv.URL
 	cfg.Toph.Token = "test-token"
-	cfg.Toph.ContestID = "abc123"
+	cfg.Toph.ContestID = "6502f105025832238e865526"
 
 	_, err := getNextPrint(context.Background(), cfg)
 	assert.Error(t, err)

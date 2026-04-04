@@ -11,7 +11,7 @@ func TestValidateConfig(t *testing.T) {
 		cfg := Config{}
 		cfg.initDefaults()
 		cfg.Toph.Token = "test-token"
-		cfg.Toph.ContestID = "abc123"
+		cfg.Toph.ContestID = "6502f105025832238e865526"
 
 		err := validateConfig(cfg)
 		assert.NoError(t, err)
@@ -20,7 +20,7 @@ func TestValidateConfig(t *testing.T) {
 	t.Run("missing token", func(t *testing.T) {
 		cfg := Config{}
 		cfg.initDefaults()
-		cfg.Toph.ContestID = "abc123"
+		cfg.Toph.ContestID = "6502f105025832238e865526"
 
 		err := validateConfig(cfg)
 		assert.Error(t, err)
