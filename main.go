@@ -129,14 +129,15 @@ func main() {
 			} else if cfg.Scope.RoomPrefix != "" {
 				pog.Infof("∟ Rooms (Prefix): %s", cfg.Scope.RoomPrefix)
 			}
-			Daemon{
+			d := Daemon{
 				cfg:           cfg,
 				params:        params,
 				exitCh:        exitch,
 				abortCh:       abortch,
 				pog:           pog.Default(),
 				delayNotFound: 5 * time.Second,
-			}.Loop(ctx)
+			}
+			d.Loop(ctx)
 		}()
 
 		signal.Notify(sigch, os.Interrupt, syscall.SIGTERM)

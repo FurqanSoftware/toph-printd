@@ -225,13 +225,14 @@ func testDaemon(t *testing.T, token, contestid string, queue *Queue) (doneids []
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		Daemon{
+		d := Daemon{
 			cfg:           cfg,
 			exitCh:        exitch,
 			abortCh:       abortch,
 			pog:           pog.NewPogger(io.Discard, "", 0),
 			delayNotFound: 125 * time.Millisecond,
-		}.Loop(ctx)
+		}
+		d.Loop(ctx)
 	}()
 
 	<-queue.emptyCh

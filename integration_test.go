@@ -154,14 +154,15 @@ func TestIntegration(t *testing.T) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		Daemon{
+		d := Daemon{
 			cfg:           cfg,
 			params:        params,
 			exitCh:        exitch,
 			abortCh:       abortch,
 			pog:           pogger,
 			delayNotFound: 125 * time.Millisecond,
-		}.Loop(ctx)
+		}
+		d.Loop(ctx)
 	}()
 
 	// Wait for all prints to be consumed.
@@ -341,13 +342,14 @@ func TestIntegrationRoomFiltering(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			Daemon{
+			d := Daemon{
 				cfg:           cfg,
 				exitCh:        exitch,
 				abortCh:       abortch,
 				pog:           pogger,
 				delayNotFound: 50 * time.Millisecond,
-			}.Loop(ctx)
+			}
+			d.Loop(ctx)
 		}()
 
 		deadline := time.After(5 * time.Second)
@@ -450,13 +452,14 @@ func TestIntegrationRoomFiltering(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			Daemon{
+			d := Daemon{
 				cfg:           cfg,
 				exitCh:        exitch,
 				abortCh:       abortch,
 				pog:           pogger,
 				delayNotFound: 50 * time.Millisecond,
-			}.Loop(ctx)
+			}
+			d.Loop(ctx)
 		}()
 
 		// Let the daemon poll a few times to confirm nothing comes through.

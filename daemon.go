@@ -16,9 +16,13 @@ type Daemon struct {
 	abortCh       chan error
 	pog           *pog.Pogger
 	delayNotFound time.Duration
+
+	consecErrors int
 }
 
-func (d Daemon) Loop(ctx context.Context) {
+const maxErrorDelay = 1 * time.Minute
+
+func (d *Daemon) Loop(ctx context.Context) {
 L:
 	for {
 		stop, delay := d.iter(ctx)
@@ -34,7 +38,7 @@ L:
 	}
 }
 
-func (d Daemon) iter(ctx context.Context) (stop bool, delay time.Duration) {
+func (d *Daemon) iter(ctx context.Context) (stop bool, delay time.Duration) {
 	pr, err := getNextPrint(ctx, d.cfg)
 	var terr tophError
 	if errors.As(err, &terr) {
@@ -44,7 +48,8 @@ func (d Daemon) iter(ctx context.Context) (stop bool, delay time.Duration) {
 			d.abortCh <- err
 			return true, 0
 		}
-		return false, d.cfg.Printd.DelayError
+		d.consecErrors++
+		return false, d.errorDelay()
 	}
 	var perr noNextPrintError
 	if errors.As(err, &perr) {
@@ -82,9 +87,11 @@ func (d Daemon) iter(ctx context.Context) (stop bool, delay time.Duration) {
 			d.abortCh <- err
 			return true, 0
 		}
-		return false, d.cfg.Printd.DelayError
+		d.consecErrors++
+		return false, d.errorDelay()
 	}
 	catch(err)
+	d.consecErrors = 0
 	if pdf.PageSkipped > 0 {
 		d.pog.Infof("∟ Pages: %d (Skipped: %d)", pdf.PageCount, pdf.PageSkipped)
 	} else {
@@ -93,4 +100,19 @@ func (d Daemon) iter(ctx context.Context) (stop bool, delay time.Duration) {
 	d.pog.Info("∟ Done")
 
 	return false, d.cfg.Printd.DelayAfter
+}
+
+func (d *Daemon) errorDelay() time.Duration {
+	cap := maxErrorDelay
+	if d.cfg.Printd.DelayError > cap {
+		cap = d.cfg.Printd.DelayError
+	}
+	delay := d.cfg.Printd.DelayError
+	for i := 1; i < d.consecErrors; i++ {
+		delay *= 2
+		if delay >= cap {
+			return cap
+		}
+	}
+	return delay
 }
