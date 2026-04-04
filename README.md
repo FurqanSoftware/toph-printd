@@ -135,3 +135,7 @@ _"Windows protected your PC."_ Sure... :clap:
 To work around this, click the small "More info" link. Then click on the "Run anyway" button.
 
 </details>
+
+## Learn More
+
+Read more about Printd on the [Furqan Software blog](https://furqansoftware.com/blog/toph-printd/).
