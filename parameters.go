@@ -28,10 +28,14 @@ func fetchParameters(ctx context.Context, cfg Config) (params Parameters, err er
 	}
 	defer resp.Body.Close()
 	switch resp.StatusCode {
+	case http.StatusOK:
+		// Continue below.
 	case http.StatusNotFound:
 		return Parameters{}, nil
 	case http.StatusForbidden:
 		return Parameters{}, tophError{"Could not retrieve parameters", errInvalidToken}
+	default:
+		return Parameters{}, retryableError{tophError{fmt.Sprintf("Unexpected response from Toph: %s", resp.Status), nil}}
 	}
 
 	b.Reset()

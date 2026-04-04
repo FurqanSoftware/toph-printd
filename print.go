@@ -50,12 +50,16 @@ func getNextPrint(ctx context.Context, cfg Config) (pr Print, err error) {
 	}
 	defer resp.Body.Close()
 	switch resp.StatusCode {
+	case http.StatusOK:
+		// Continue below.
 	case http.StatusNotFound:
 		return Print{}, noNextPrintError{
 			contestLocked: resp.Header.Get("Toph-Contest-Locked") == "1",
 		}
 	case http.StatusForbidden:
 		return Print{}, tophError{"Could not retrieve print", errInvalidToken}
+	default:
+		return Print{}, retryableError{tophError{fmt.Sprintf("Unexpected response from Toph: %s", resp.Status), nil}}
 	}
 
 	b.Reset()
