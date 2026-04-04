@@ -11,6 +11,9 @@ type tophError struct {
 }
 
 func (e tophError) Error() string {
+	if e.err == nil {
+		return e.msg
+	}
 	return fmt.Sprintf("%s: %s", e.msg, e.err)
 }
 
