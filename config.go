@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -130,6 +131,12 @@ func validateConfig(cfg Config) error {
 	var msg []string
 	if cfg.Toph.BaseURL == "" {
 		msg = append(msg, "missing Toph base URL")
+	} else if u, err := url.Parse(cfg.Toph.BaseURL); err != nil {
+		msg = append(msg, "invalid Toph base URL")
+	} else if u.Scheme != "https" {
+		if !strings.HasSuffix(u.Hostname(), ".local") {
+			msg = append(msg, "Toph base URL must use HTTPS")
+		}
 	}
 	if cfg.Toph.Token == "" {
 		msg = append(msg, "missing token")
