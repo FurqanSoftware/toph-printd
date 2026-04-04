@@ -15,9 +15,9 @@ func printPDF(cfg Config, name string) error {
 	var cmd *exec.Cmd
 	switch cfg.Windows.PrintHelper {
 	case PrintHelperSumatraPDF:
-		args := []string{"-print-to-default", "-silent", name}
+		args := []string{"-print-to-default", "-silent", "-exit-when-done", name}
 		if cfg.Printer.Name != "" {
-			args = []string{"-print-to", cfg.Printer.Name, "-silent", name}
+			args = []string{"-print-to", cfg.Printer.Name, "-silent", "-exit-when-done", name}
 		}
 		cmd = exec.Command(cfg.Windows.PrintHelperPath, args...)
 	default:
