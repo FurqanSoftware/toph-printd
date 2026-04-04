@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/url"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -143,6 +144,8 @@ func validateConfig(cfg Config) error {
 	}
 	if cfg.Toph.ContestID == "" {
 		msg = append(msg, "missing contest ID")
+	} else if !regexp.MustCompile(`^[0-9a-f]{24}$`).MatchString(cfg.Toph.ContestID) {
+		msg = append(msg, "invalid contest ID")
 	}
 	if len(msg) != 0 {
 		return errors.New(strings.Join(msg, ", "))
