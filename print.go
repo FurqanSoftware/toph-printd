@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -71,6 +72,9 @@ func getNextPrint(ctx context.Context, cfg Config) (pr Print, err error) {
 	err = json.NewDecoder(&b).Decode(&pr)
 	if err != nil {
 		return Print{}, retryableError{tophError{"Could not parse response", err}}
+	}
+	if pr.ID == "" || pr.ID != filepath.Base(pr.ID) {
+		return Print{}, tophError{"Invalid print ID in response", nil}
 	}
 	return pr, nil
 }
