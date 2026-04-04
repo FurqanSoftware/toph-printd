@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Printd - Download</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    max-width: 600px;
+    margin: 80px auto;
+    padding: 0 20px;
+    color: #333;
+    line-height: 1.6;
+  }
+  h1 { margin-bottom: 0.25em; }
+  .subtitle { color: #666; margin-bottom: 2em; }
+  .status { margin: 2em 0; }
+  .downloads { margin: 2em 0; }
+  .downloads a {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px 5px 5px 0;
+    background: #3598dc;
+    border: 1px solid #2a7ab8;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    border-radius: 6px;
+  }
+  .downloads a:hover { background: #2a7ab8; }
+  .downloads a.secondary {
+    background: #f6f8fa;
+    color: #333;
+    border: 1px solid #d1d5da;
+  }
+  .downloads a.secondary:hover { background: #e9ecef; }
+  .detected { font-weight: bold; }
+  .note { color: #666; font-size: 0.9em; margin-top: 2em; }
+  .quickstart { margin-top: 2em; border-top: 1px solid #e1e4e8; padding-top: 1em; }
+  .quickstart h2 { font-size: 1.2em; }
+  .quickstart ol { padding-left: 1.2em; }
+  .quickstart li { margin-bottom: 0.5em; }
+</style>
+</head>
+<body>
+<h1>Printd</h1>
+<p class="subtitle">For Toph, By Furqan Software</p>
+
+<div class="status" id="status">Detecting your platform...</div>
+
+<div class="downloads" id="downloads" style="display: none;"></div>
+
+<div class="quickstart">
+  <h2>Quick Start</h2>
+  <ol>
+    <li>Download and extract Printd for your platform.</li>
+    <li>On Windows, download <a href="http://www.columbia.edu/~em36/pdftoprinter.html">PDFtoPrinter.exe</a> or <a href="https://www.sumatrapdfreader.org/">SumatraPDF.exe</a> and place it in the same directory as printd.exe.</li>
+    <li>On Linux, ensure CUPS is installed and your printer is configured.</li>
+    <li>Download the Printd configuration file from your contest on Toph and place it in the same directory as the Printd binary.</li>
+    <li>Run Printd.</li>
+  </ol>
+  <p>For detailed instructions, configuration options, and troubleshooting, see the <a href="https://github.com/FurqanSoftware/toph-printd#readme">README</a>.</p>
+  <p>Need help? <a href="https://community.toph.co/c/support/printd/57">Post on Toph Community</a>.</p>
+</div>
+
+<script>
+(function() {
+  var repoOwner = 'FurqanSoftware';
+  var repoName = 'toph-printd';
+
+  function detectPlatform() {
+    var ua = navigator.userAgent.toLowerCase();
+    var platform = navigator.platform.toLowerCase();
+
+    var os = 'unknown';
+    if (ua.indexOf('win') !== -1 || platform.indexOf('win') !== -1) {
+      os = 'windows';
+    } else if (ua.indexOf('linux') !== -1 || platform.indexOf('linux') !== -1) {
+      os = 'linux';
+    }
+
+    var arch = 'amd64';
+    if (ua.indexOf('arm64') !== -1 || ua.indexOf('aarch64') !== -1 || platform.indexOf('aarch64') !== -1) {
+      arch = 'arm64';
+    } else if (ua.indexOf('wow64') === -1 && (ua.indexOf('x86') !== -1 || ua.indexOf('i686') !== -1 || ua.indexOf('i386') !== -1)) {
+      arch = '386';
+    }
+
+    return { os: os, arch: arch };
+  }
+
+  function assetName(version, os, arch) {
+    var ext = os === 'windows' ? '.zip' : '.tar.gz';
+    return 'printd_' + version + '_' + os + '_' + arch + ext;
+  }
+
+  function downloadURL(version, os, arch) {
+    return 'https://github.com/' + repoOwner + '/' + repoName + '/releases/download/v' + version + '/' + assetName(version, os, arch);
+  }
+
+  var osLabels = { windows: 'Windows', linux: 'Linux' };
+  var archLabels = { 'amd64': '64-bit', '386': '32-bit', 'arm64': 'ARM64' };
+
+  function render(version, detected) {
+    var status = document.getElementById('status');
+    var downloads = document.getElementById('downloads');
+
+    if (detected.os === 'unknown') {
+      status.innerHTML = 'Could not detect your platform. Please choose a download below.';
+    } else {
+      status.innerHTML = 'Detected: <span class="detected">' + osLabels[detected.os] + ' ' + archLabels[detected.arch] + '</span>';
+    }
+
+    var html = '';
+
+    if (detected.os !== 'unknown') {
+      html += '<a href="' + downloadURL(version, detected.os, detected.arch) + '">Download Printd ' + version + ' for ' + osLabels[detected.os] + ' ' + archLabels[detected.arch] + '</a>';
+      html += '<br>';
+    }
+
+    var allBuilds = [
+      { os: 'windows', arch: 'amd64' },
+      { os: 'windows', arch: '386' },
+      { os: 'windows', arch: 'arm64' },
+      { os: 'linux', arch: 'amd64' },
+      { os: 'linux', arch: '386' },
+      { os: 'linux', arch: 'arm64' }
+    ];
+
+    html += '<p style="margin-top: 1em; margin-bottom: 0.5em; color: #666; font-size: 0.9em;">All downloads:</p>';
+    for (var i = 0; i < allBuilds.length; i++) {
+      var b = allBuilds[i];
+      if (b.os === detected.os && b.arch === detected.arch) continue;
+      html += '<a class="secondary" href="' + downloadURL(version, b.os, b.arch) + '">' + osLabels[b.os] + ' ' + archLabels[b.arch] + '</a> ';
+    }
+
+    downloads.innerHTML = html;
+    downloads.style.display = 'block';
+  }
+
+  fetch('https://api.github.com/repos/' + repoOwner + '/' + repoName + '/releases/latest')
+    .then(function(resp) { return resp.json(); })
+    .then(function(release) {
+      var version = release.tag_name.replace(/^v/, '');
+      var detected = detectPlatform();
+      render(version, detected);
+    })
+    .catch(function() {
+      document.getElementById('status').textContent = 'Could not fetch latest release. Please visit the GitHub releases page.';
+      document.getElementById('downloads').innerHTML = '<a href="https://github.com/' + repoOwner + '/' + repoName + '/releases/latest">Go to Releases</a>';
+      document.getElementById('downloads').style.display = 'block';
+    });
+})();
+</script>
+</body>
+</html>
