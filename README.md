@@ -90,7 +90,7 @@ pageSize = "A4" # Size of the page. Use one of "A4", "letter", or "legal".
 
 [toph]
 baseURL = "https://toph.co"
-token = "..."               # Collect your Printd token from Toph Support. The token is contest-specific.
+token = "..."               # Collect your Printd token from Toph Support. The token is contest-specific. Can also be set via the PRINTD_TOPH_TOKEN environment variable.
 contestID = "..."           # The 24-character hex ID of the contest goes here.
 timeout = "30s"             # Timeout duration for HTTP client.
 
