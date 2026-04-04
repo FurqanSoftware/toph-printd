@@ -63,5 +63,8 @@ func checkPrinter(cfg Config) error {
 			return nil
 		}
 	}
+	if err := sc.Err(); err != nil {
+		return err
+	}
 	return errPrinterNotExist
 }
