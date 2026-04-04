@@ -125,6 +125,9 @@ func parseConfig() (cfg Config, err error) {
 	if err != nil {
 		return
 	}
+	if cfg.Toph.Token == "" {
+		cfg.Toph.Token = os.Getenv("PRINTD_TOPH_TOKEN")
+	}
 	return
 }
 
