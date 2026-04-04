@@ -72,7 +72,19 @@ func getNextPrint(ctx context.Context, cfg Config) (pr Print, err error) {
 }
 
 func runPrintJob(ctx context.Context, cfg Config, pr Print) (PDF, error) {
-	name := pr.ID + ".pdf"
+	var name string
+	if cfg.Printd.KeepPDF {
+		name = pr.ID + ".pdf"
+	} else {
+		f, err := os.CreateTemp("", "printd-*.pdf")
+		if err != nil {
+			return PDF{}, err
+		}
+		name = f.Name()
+		f.Close()
+		defer os.Remove(name)
+	}
+
 	pdf, err := PDFBuilder{
 		cfg: cfg,
 	}.Build(name, pr)
@@ -82,13 +94,6 @@ func runPrintJob(ctx context.Context, cfg Config, pr Print) (PDF, error) {
 
 	if !cfg.Debug.DontPrint && pdf.PageCount > 0 {
 		err = printPDF(cfg, name)
-		if err != nil {
-			return PDF{}, err
-		}
-	}
-
-	if !cfg.Printd.KeepPDF {
-		err = os.Remove(name)
 		if err != nil {
 			return PDF{}, err
 		}
