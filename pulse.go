@@ -16,18 +16,18 @@ L:
 		req, err := http.NewRequestWithContext(ctx, "POST", fmt.Sprintf("%s/api/printd/pulse?contest=%s", cfg.Toph.BaseURL, cfg.Toph.ContestID), nil)
 		if err != nil {
 			pog.Error(err)
-			goto retry
+			goto Retry
 		}
 		req.Header.Add("Authorization", "Printd "+cfg.Toph.Token)
 		req.Header.Add("Printd-ID", printdid)
 		resp, err = http.DefaultClient.Do(req)
 		if err != nil {
 			pog.Errorln("Could not send pulse:", err)
-			goto retry
+			goto Retry
 		}
 		resp.Body.Close()
 
-	retry:
+	Retry:
 		select {
 		case <-exitch:
 			break L
