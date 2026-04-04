@@ -42,9 +42,7 @@ func TestDaemon(t *testing.T) {
 	assert.NoError(t, aborterr)
 
 	assert.FileExists(t, "6502f46b17592a5a9e870928.pdf")
-	os.Remove("6502f46b17592a5a9e870928.pdf")
 	assert.FileExists(t, "6502f9bf92c75c2f7874698e.pdf")
-	os.Remove("6502f9bf92c75c2f7874698e.pdf")
 
 	assert.Equal(t, []string{
 		"6502f46b17592a5a9e870928",
@@ -68,7 +66,6 @@ func TestDaemonEmptyHeader(t *testing.T) {
 	assert.NoError(t, aborterr)
 
 	assert.FileExists(t, "6502fec79eed503a402e0b59.pdf")
-	os.Remove("6502fec79eed503a402e0b59.pdf")
 
 	assert.Equal(t, []string{
 		"6502fec79eed503a402e0b59",
@@ -91,7 +88,6 @@ func TestDaemonEmptyContent(t *testing.T) {
 	assert.NoError(t, aborterr)
 
 	assert.FileExists(t, "6502fecc74093fd44c060e11.pdf")
-	os.Remove("6502fecc74093fd44c060e11.pdf")
 
 	assert.Equal(t, []string{
 		"6502fecc74093fd44c060e11",
@@ -124,9 +120,7 @@ func TestDaemonBreak(t *testing.T) {
 	assert.NoError(t, aborterr)
 
 	assert.FileExists(t, "6502fed2ee36d5244aade158.pdf")
-	os.Remove("6502fed2ee36d5244aade158.pdf")
 	assert.FileExists(t, "6502fed88ea6c9620b82bf5a.pdf")
-	os.Remove("6502fed88ea6c9620b82bf5a.pdf")
 
 	assert.Equal(t, []string{
 		"6502fed2ee36d5244aade158",
@@ -170,9 +164,7 @@ func TestDaemonLocked(t *testing.T) {
 	assert.ErrorIs(t, aborterr, noNextPrintError{contestLocked: true})
 
 	assert.FileExists(t, "6503554aad610a1d499e9a70.pdf")
-	os.Remove("6503554aad610a1d499e9a70.pdf")
 	assert.FileExists(t, "65035545d32aebbef6dff9fe.pdf")
-	os.Remove("65035545d32aebbef6dff9fe.pdf")
 
 	assert.Equal(t, []string{
 		"6503554aad610a1d499e9a70",
@@ -182,6 +174,12 @@ func TestDaemonLocked(t *testing.T) {
 
 func testDaemon(t *testing.T, token, contestid string, queue *Queue) (doneids []string, aborterr error) {
 	pog.InitDefault()
+
+	for _, fr := range queue.frames {
+		if fr.print != nil {
+			t.Cleanup(func() { os.Remove(fr.print.ID + ".pdf") })
+		}
+	}
 
 	r := mux.NewRouter()
 

@@ -73,6 +73,7 @@ func TestBuildPageLimit(t *testing.T) {
 	longContent := strings.Repeat("Line of text\n", 500)
 
 	t.Run("no limit", func(t *testing.T) {
+		t.Cleanup(func() { os.Remove("test_no_limit.pdf") })
 		pdf, err := b.Build("test_no_limit.pdf", Print{
 			Header:    "Test",
 			Content:   longContent,
@@ -81,10 +82,10 @@ func TestBuildPageLimit(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Greater(t, pdf.PageCount, 1)
 		assert.Equal(t, 0, pdf.PageSkipped)
-		os.Remove("test_no_limit.pdf")
 	})
 
 	t.Run("limit 1", func(t *testing.T) {
+		t.Cleanup(func() { os.Remove("test_limit_1.pdf") })
 		pdf, err := b.Build("test_limit_1.pdf", Print{
 			Header:    "Test",
 			Content:   longContent,
@@ -93,10 +94,10 @@ func TestBuildPageLimit(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, 1, pdf.PageCount)
 		assert.Greater(t, pdf.PageSkipped, 0)
-		os.Remove("test_limit_1.pdf")
 	})
 
 	t.Run("limit 2", func(t *testing.T) {
+		t.Cleanup(func() { os.Remove("test_limit_2.pdf") })
 		pdf, err := b.Build("test_limit_2.pdf", Print{
 			Header:    "Test",
 			Content:   longContent,
@@ -105,10 +106,10 @@ func TestBuildPageLimit(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, 2, pdf.PageCount)
 		assert.Greater(t, pdf.PageSkipped, 0)
-		os.Remove("test_limit_2.pdf")
 	})
 
 	t.Run("limit exceeds pages", func(t *testing.T) {
+		t.Cleanup(func() { os.Remove("test_limit_high.pdf") })
 		pdf, err := b.Build("test_limit_high.pdf", Print{
 			Header:    "Test",
 			Content:   "Short content",
@@ -117,7 +118,6 @@ func TestBuildPageLimit(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, 1, pdf.PageCount)
 		assert.Equal(t, 0, pdf.PageSkipped)
-		os.Remove("test_limit_high.pdf")
 	})
 }
 

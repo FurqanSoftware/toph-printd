@@ -217,6 +217,8 @@ func TestRunPrintJobTempFile(t *testing.T) {
 }
 
 func TestRunPrintJobKeepPDF(t *testing.T) {
+	t.Cleanup(func() { os.Remove("6502f9bf92c75c2f7874698e.pdf") })
+
 	cfg := Config{}
 	cfg.initDefaults()
 	cfg.Printd.KeepPDF = true
@@ -234,5 +236,4 @@ func TestRunPrintJobKeepPDF(t *testing.T) {
 	assert.Equal(t, 1, pdf.PageCount)
 
 	assert.FileExists(t, "6502f9bf92c75c2f7874698e.pdf")
-	os.Remove("6502f9bf92c75c2f7874698e.pdf")
 }
