@@ -79,7 +79,8 @@ func (c *ConfigPrinter) initDefaults() {
 }
 
 type ConfigWindows struct {
-	PrintHelper PrintHelper
+	PrintHelper     PrintHelper
+	PrintHelperPath string `toml:"-"`
 }
 
 func (c *ConfigWindows) initDefaults() {

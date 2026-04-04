@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 
 	"github.com/FurqanSoftware/pog"
@@ -18,13 +19,13 @@ func printPDF(cfg Config, name string) error {
 		if cfg.Printer.Name != "" {
 			args = []string{"-print-to", cfg.Printer.Name, "-silent", name}
 		}
-		cmd = exec.Command(`.\SumatraPDF.exe`, args...)
+		cmd = exec.Command(cfg.Windows.PrintHelperPath, args...)
 	default:
 		args := []string{name}
 		if cfg.Printer.Name != "" {
 			args = append(args, strconv.Quote(cfg.Printer.Name))
 		}
-		cmd = exec.Command(`.\PDFtoPrinter.exe`, args...)
+		cmd = exec.Command(cfg.Windows.PrintHelperPath, args...)
 	}
 	_, err := cmd.Output()
 	if err != nil {
@@ -37,35 +38,36 @@ func printPDF(cfg Config, name string) error {
 	return nil
 }
 
-func resolvePrintHelper(cfg *Config) {
-	if cfg.Windows.PrintHelper != PrintHelperAuto {
-		return
-	}
-	if _, err := exec.LookPath(`.\PDFtoPrinter.exe`); err == nil {
-		cfg.Windows.PrintHelper = PrintHelperPDFtoPrinter
-		return
-	}
-	if _, err := exec.LookPath(`.\SumatraPDF.exe`); err == nil {
-		cfg.Windows.PrintHelper = PrintHelperSumatraPDF
-		return
-	}
-	pog.Fatal("Missing dependency: could not find PDFtoPrinter.exe or SumatraPDF.exe")
+var printHelperExe = map[PrintHelper]string{
+	PrintHelperPDFtoPrinter: `.\PDFtoPrinter.exe`,
+	PrintHelperSumatraPDF:   `.\SumatraPDF.exe`,
 }
 
-func checkDependencies(cfg Config) {
-	switch cfg.Windows.PrintHelper {
-	case PrintHelperSumatraPDF:
-		_, err := exec.LookPath(`.\SumatraPDF.exe`)
-		if err != nil {
-			pog.Fatal("Missing dependency: could not find SumatraPDF.exe")
+func resolvePrintHelper(cfg *Config) {
+	if cfg.Windows.PrintHelper == PrintHelperAuto {
+		for _, h := range []PrintHelper{PrintHelperPDFtoPrinter, PrintHelperSumatraPDF} {
+			if _, err := exec.LookPath(printHelperExe[h]); err == nil {
+				cfg.Windows.PrintHelper = h
+				goto PinPath
+			}
 		}
-	default:
-		_, err := exec.LookPath(`.\PDFtoPrinter.exe`)
-		if err != nil {
-			pog.Fatal("Missing dependency: could not find PDFtoPrinter.exe")
-		}
+		pog.Fatal("Missing dependency: could not find PDFtoPrinter.exe or SumatraPDF.exe")
+		return
 	}
+
+PinPath:
+	exe, ok := printHelperExe[cfg.Windows.PrintHelper]
+	if !ok {
+		pog.Fatal("Invalid print helper: " + string(cfg.Windows.PrintHelper))
+	}
+	p, err := exec.LookPath(exe)
+	if err != nil {
+		pog.Fatal("Missing dependency: could not find " + exe)
+	}
+	cfg.Windows.PrintHelperPath, _ = filepath.Abs(p)
 }
+
+func checkDependencies(cfg Config) {}
 
 var printHelperNames = map[PrintHelper]string{
 	PrintHelperPDFtoPrinter: "PDFtoPrinter",
